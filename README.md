@@ -1,0 +1,3 @@
+# EduJob Application Tracker
+This project is a Spring Boot + Thymeleaf MVC web application that allows users to track applications for jobs, universities, lycees or courses. Users can manage multiple applications, track required documents, deadlines, interviews, and application status. Users can also add supervisors (e.g., parents or career advisors) to oversee their application progress.
+The project is designed to demonstrate full-stack Spring Boot skills, including MVC architecture, JPA relationships, form validation, authentication, file upload, and deployment using Docker with an Oracle database.
