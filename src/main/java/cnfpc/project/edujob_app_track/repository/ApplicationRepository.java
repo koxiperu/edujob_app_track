@@ -1,0 +1,24 @@
+package cnfpc.project.edujob_app_track.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import cnfpc.project.edujob_app_track.model.Application;
+import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
+import cnfpc.project.edujob_app_track.model.Enums.ApplicationType;
+import cnfpc.project.edujob_app_track.model.Enums.ResultStatus;
+import cnfpc.project.edujob_app_track.model.User;
+
+@Repository
+public interface ApplicationRepository extends JpaRepository<Application, Long>{
+    List<Application> findByUser(User user);
+    List<Application> findByStatus(ApplicationStatus status);
+    List<Application> findByApplicationType(ApplicationType type);
+    List<Application> findByTitleContainingIgnoreCase(String title);
+    List<Application> findByResponseStatus(String resultStatus);
+    List<Application> findByUserAndResponseStatus(User user, ResultStatus resultStatus);
+    List<Application> findByUserAndStatusAndResponseStatus(User user, ApplicationStatus status, ResultStatus resultStatus);
+    List<Application> findByStatusAndResponseStatus(ApplicationStatus status, ResultStatus resultStatus);
+}
