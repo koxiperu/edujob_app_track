@@ -1,0 +1,154 @@
+# EduJob Application Tracker
+This project is a Spring Boot + Thymeleaf MVC web application that allows users to track applications for jobs, universities, lycees or courses. Users can manage multiple applications, track required documents, deadlines, interviews, and application status. Users can also add supervisors (e.g., parents or career advisors) to oversee their application progress.
+The project is designed to demonstrate full-stack Spring Boot skills, including MVC architecture, JPA relationships, form validation, authentication, file upload, and deployment using Docker with an Oracle database.
+
+# Project description
+- Track applications for jobs, universities, lycées, and courses.
+- Users can be students or job seekers.
+- Supervisors (like parents or career consultants) can monitor applications.
+- Track required documents, deadlines, interviews, and responses.
+- Upload and store documents (PDFs) in Oracle BLOBs.
+- Notifications for upcoming deadlines/interviews.
+
+# Features
+List main features (high-priority first):
+- User registration and login (Spring Security)
+- Role-based access (ADMIN, USER)
+- Supervisor management (users can add supervisors)
+- Application CRUD
+- Document upload (PDFs stored in Oracle BLOBs)
+- Many-to-many relationships (Application ↔ Documents, User ↔ Supervisors)
+- Institution management (universities, employers, lycées, courses)
+- Dashboard showing applications, documents, and notifications
+
+# Technical stack
+- Backend: Spring Boot 3.x
+- Frontend: Thymeleaf, HTML, CSS, JavaScript
+- Database: Oracle (Docker container)
+- ORM: JPA / Hibernate
+- Authentication: Spring Security (login, session management)
+- Validation: @Valid, @NotNull, @Size, etc.
+- Build: Maven, executable JAR
+- Development tools: DBeaver, Docker
+
+# DB Schema
+Describe entities and relationships briefly (or refer to ERD):
+- Users: can be students, job seekers, supervisors
+- Roles: ADMIN, USER
+- Applications: track submissions and deadlines
+- Documents: uploaded PDFs, reusable across applications
+- Institutions: universities, employers, lycées, courses
+- Join tables: user_supervisor, app_doc
+
+# Prerequisites
+- Java 21
+- Maven
+- Docker (Oracle container running)
+- DBeaver or any Oracle client (optional)
+
+# Project setup and run instructions
+1. Clone the repository:
+   git clone <repo-url>
+2. Switch to your feature branch:
+   git checkout <branch-name>
+3. Configure application.properties:
+   spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
+   spring.datasource.username=app_tracker
+   spring.datasource.password=MyStrongPassword123
+4. Run Oracle container (if not already running)
+5. Build and run the application:
+   mvn clean package
+   java -jar target/app-tracker-0.0.1-SNAPSHOT.jar
+6. Access in browser: http://localhost:8080
+
+
+
+## Step 1: Install Docker (if you don’t have it)
+
+Because Oracle XE is too heavy to install manually — Docker is required.
+
+## Step 2: Download the repository OR just download docker-compose.yml
+
+The repo contains a docker-compose.yml like:
+
+version: '3.8'
+services:
+  oracle:
+    image: gvenzl/oracle-xe
+    container_name: oracle-xe
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: Admin123
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+volumes:
+  oracle-data:
+
+Run:
+
+```docker compose up -d```
+
+
+This starts a clean Oracle XE instance.
+
+## Step 3: Create your project schema
+
+Run your SQL script:
+
+```schema.sql```
+
+
+```docker exec -i oracle-xe sqlplus sys/Admin123@XEPDB1 as sysdba < schema.sql```
+
+
+This creates:
+
+Schema: app_tracker
+
+Role table
+
+Admin user (hashed password)
+
+Any required sequences or indexes
+
+## Step 4: Run your application
+
+Download JAR file:
+
+application-tracker-1.0.0.jar
+
+
+Then run it:
+
+```java -jar application-tracker-1.0.0.jar```
+
+
+Now connect the app to the Oracle container:
+
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
+spring.datasource.username=app_tracker
+spring.datasource.password=AppTracker123
+
+
+Open browser:
+
+http://localhost:8080
+
+
+And your application works
+
+# Usage
+- Register a new user or login
+- Add a supervisor (if applicable)
+- Create applications and attach documents
+- Track status, deadlines, and upcoming interviews
+- View dashboards and notifications
+
+# Future possible enhasements (TODO)
+- Email notifications for deadlines/interviews
+- Advanced search/filter for applications
+- Export application data to PDF/Excel
+- Integration with external APIs (universities or employers)
+
