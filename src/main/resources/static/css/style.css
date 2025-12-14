@@ -1,0 +1,111 @@
+/* General body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #2C2C2C; /* Default text */
+}
+
+/* Header */
+.header {
+    background-color: #C797C7;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #CECDE1;
+    padding: 10px;
+}
+
+.navbar a {
+    color: #EB691F;
+    margin-right: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #F7B334;
+}
+
+.nav-right {
+    float: right;
+}
+
+/* Footer */
+.footer {
+    background-color: #CECDE1;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Container with background images */
+.container.dashboard {
+    background: url('../images/corner_bg.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.container.user {
+    background: url('../images/hor_bg.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.container.forms {
+    background: url('../images/centr_bg.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+/* Card-like sections for readability */
+.card {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.button {
+    background-color: #F7B334;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #EB691F;
+}
+
+/* Form inputs */
+input, select, textarea {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #CECDE1;
+    width: 100%;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #C797C7;
+}
+
+/* Optional: accent colors */
+.accent-blue { color: #5DADE2; }
+.accent-light-blue { color: #85C1E9; }
+.accent-sky-blue { color: #5BC0DE; }
+.accent-violet { color: #9B59B6; }
+.accent-light-green { color: #2ECC71; }

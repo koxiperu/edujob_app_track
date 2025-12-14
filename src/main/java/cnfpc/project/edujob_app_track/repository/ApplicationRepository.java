@@ -14,6 +14,7 @@ import cnfpc.project.edujob_app_track.model.User;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long>{
     List<Application> findByUser(User user);
+    List<Application> findByUserAndStatus(User user, ApplicationStatus status);
     List<Application> findByStatus(ApplicationStatus status);
     List<Application> findByApplicationType(ApplicationType type);
     List<Application> findByTitleContainingIgnoreCase(String title);

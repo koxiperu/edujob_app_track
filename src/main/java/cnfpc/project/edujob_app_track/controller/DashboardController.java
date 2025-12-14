@@ -1,6 +1,6 @@
 package cnfpc.project.edujob_app_track.controller;
 
-import org.springframework.security.core.Authentication;
+import java.security.Principal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DashboardController {
 
     @GetMapping("/dashboard")
-    public String dashboard(Authentication authentication, Model model) {
-        model.addAttribute("username", authentication.getName());
-        return "dashboard";
+    public String dashboard(Model model, Principal principal) {
+        model.addAttribute("username", principal.getName());
+        model.addAttribute("title", "Dashboard");
+
+        return "layout/base"; // render base.html
     }
 }
+
 
