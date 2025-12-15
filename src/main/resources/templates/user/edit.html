@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${title}">Edit Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>Application Tracker</h1>
+</div>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/applications}">Applications</a>
+    <a th:href="@{/institutions}">Institutions</a>
+    <a th:href="@{/documents}">Documents</a>
+    <a th:href="@{/user/profile}">Profile</a>
+    <span class="nav-right">
+        <span th:text="${user.username}"></span>
+        <a th:href="@{/logout}">Logout</a>
+    </span>
+</div>
+
+<!-- Main Content -->
+<main class="container forms">
+    <div class="card">
+        <h2>Edit Profile</h2>
+
+        <form th:action="@{/user/edit}" th:object="${user}" method="post" th:csrf="true">
+            <!-- Hidden ID field -->
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{username}">
+            <input type="hidden" th:field="*{password}">
+
+            <div>
+                <label>First Name</label>
+                <input type="text" th:field="*{firstName}" required />
+                <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" style="color:red"></p>
+            </div>
+
+            <div>
+                <label>Last Name</label>
+                <input type="text" th:field="*{lastName}" required />
+                <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" style="color:red"></p>
+            </div>
+
+            <div>
+                <label>Email</label>
+                <input type="email" th:field="*{email}" required />
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></p>
+            </div>
+
+            <div>
+                <label>Phone</label>
+                <input type="text" th:field="*{phone}" />
+                <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red"></p>
+            </div>
+
+            <div>
+                <label>Birth Date</label>
+                <input type="date" th:field="*{birthDate}" />
+                <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" style="color:red"></p>
+            </div>
+
+            <button type="submit" class="button">Save Changes</button>
+        </form>
+    </div>
+</main>
+
+<!-- Footer -->
+<div class="footer">
+    <p>© 2025 Application Tracker</p>
+</div>
+
+</body>
+</html>
