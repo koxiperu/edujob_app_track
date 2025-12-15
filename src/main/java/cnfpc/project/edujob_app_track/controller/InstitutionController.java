@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cnfpc.project.edujob_app_track.model.Enums.InstitutionType;
 import cnfpc.project.edujob_app_track.model.Institution;
@@ -45,9 +46,10 @@ public class InstitutionController {
 
     /* CREATE FORM */
     @GetMapping("/new")
-    public String createForm(Model model) {
+    public String createForm(@RequestParam(required = false) String returnUrl, Model model) {
         model.addAttribute("institution", new Institution());
         model.addAttribute("types", InstitutionType.values());
+        model.addAttribute("returnUrl", returnUrl);
         model.addAttribute("title", "Add Institution");
         model.addAttribute("containerClass", "forms");
         return "institution/form";
@@ -55,17 +57,26 @@ public class InstitutionController {
 
     /* CREATE */
     @PostMapping
-    public String create(@Valid @ModelAttribute Institution institution, BindingResult result, Model model) {
+    public String create(@Valid @ModelAttribute Institution institution,
+                        BindingResult result,
+                        @RequestParam(required = false) String returnUrl,
+                        Model model) {
+
         if (result.hasErrors()) {
             model.addAttribute("types", InstitutionType.values());
+            model.addAttribute("returnUrl", returnUrl);
             model.addAttribute("title", "Add Institution");
             return "institution/form";
         }
 
         institutionRepository.save(institution);
+
+        if (returnUrl != null && !returnUrl.isBlank()) {
+            return "redirect:" + returnUrl;
+        }
+
         return "redirect:/institutions";
     }
-
     /* EDIT FORM */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {

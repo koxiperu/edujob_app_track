@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} ?: 'Application Tracker'">Applications</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container user">
+
+    <div class="card">
+        <h1 th:text="${title}">Applications</h1>
+        <a th:href="@{/applications/new}" class="button">Add Application</a>
+    </div>
+
+    <div class="types-grid">
+
+        <!-- JOB Applications -->
+        <div class="type-card" th:if="${!#lists.isEmpty(jobApplications)}">
+            <h2>Job Applications</h2>
+            <div class="applications-list">
+                <div class="card" th:each="app : ${jobApplications}">
+                    <h3 th:text="${app.title}"></h3>
+                    <p><strong>Institution:</strong> <span th:text="${app.institution.name}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${app.status}"></span></p>
+                    <p><strong>Submission Deadline:</strong> <span th:text="${app.submitDeadline}"></span></p>
+                    <div class="card-buttons">
+                        <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="button">Edit</a>
+                        <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                            <button type="submit" class="button danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDUCATIONAL Applications -->
+        <div class="type-card" th:if="${!#lists.isEmpty(eduApplications)}">
+            <h2>Educational Applications</h2>
+            <div class="applications-list">
+                <div class="card" th:each="app : ${eduApplications}">
+                    <h3 th:text="${app.title}"></h3>
+                    <p><strong>Institution:</strong> <span th:text="${app.institution.name}"></span></p>
+                    <p><strong>Type:</strong> <span th:text="${app.applicationType}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${app.status}"></span></p>
+                    <div class="card-buttons">
+                        <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="button">Edit</a>
+                        <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                            <button type="submit" class="button danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

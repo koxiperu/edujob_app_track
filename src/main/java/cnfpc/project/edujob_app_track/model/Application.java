@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -44,6 +45,7 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private ApplicationType applicationType; // JOB / UNIVERSITY / LYCEE / COURSE
 
+    @Column(updatable = false)
     private LocalDate creationDate;
     private LocalDate submitDate;
     private LocalDate submitDeadline;
@@ -67,6 +69,12 @@ public class Application {
     
     private Set<Document> documents;
 
+    @PrePersist
+    protected void onCreate() {
+        if (this.creationDate == null) {
+            this.creationDate = LocalDate.now();
+        }
+    }
     public Long getId() {
         return id;
     }
@@ -153,6 +161,30 @@ public class Application {
 
     public void setDocuments(Set<Document> documents) {
         this.documents = documents;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ResultStatus getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(ResultStatus responseStatus) {
+        this.responseStatus = responseStatus;
+    }
+
+    public String getResultNotes() {
+        return resultNotes;
+    }
+
+    public void setResultNotes(String resultNotes) {
+        this.resultNotes = resultNotes;
     }
 
     

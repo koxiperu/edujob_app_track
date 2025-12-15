@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Institutions</title>
+    <title th:text="${title} ?: 'Application Tracker'">Institutions</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<div class="header">Application Tracker</div>
-
-<div class="navbar">
-    <a th:href="@{/institutions/new}" class="button">Add Institution</a>
-</div>
+<!-- Base layout fragments -->
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
 
 <main class="container user">
+
+    <div class="card">
+        <h1 th:text="${title}">Institutions</h1>
+        <a th:href="@{/institutions/new}" class="button">Add Institution</a>
+    </div>
 
     <div class="types-grid">
         <div class="type-card" th:each="entry : ${groupedInstitutions}" th:if="${!#lists.isEmpty(entry.value)}">
@@ -38,6 +41,7 @@
 
 </main>
 
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>
