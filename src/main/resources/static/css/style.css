@@ -2,7 +2,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    color: #2C2C2C; /* Default text */
+    color: #2C2C2C;
 }
 
 /* Header */
@@ -30,63 +30,91 @@ body {
     color: #F7B334;
 }
 
-.nav-right {
-    float: right;
-}
-
-/* Footer */
-.footer {
-    background-color: #CECDE1;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-/* Container with background images */
-.container.dashboard {
-    background: url('../images/corner_bg.jpg') no-repeat center center;
-    background-size: cover;
+/* Container backgrounds */
+.container.dashboard, .container.user, .container.forms {
     min-height: 80vh;
     padding: 20px;
-}
-
-.container.user {
-    background: url('../images/hor_bg.jpg') no-repeat center center;
     background-size: cover;
-    min-height: 80vh;
-    padding: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.container.forms {
-    background: url('../images/centr_bg.jpg') no-repeat center center;
-    background-size: cover;
-    min-height: 80vh;
-    padding: 20px;
+.container.dashboard { background: url('../images/corner_bg.jpg'); }
+.container.user { background: url('../images/hor_bg.jpg'); }
+.container.forms { background: url('../images/centr_bg.jpg'); }
+
+/* Grid of type cards */
+.types-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: flex-start;
 }
 
-/* Card-like sections for readability */
-.card {
+/* Each type card */
+.type-card {
     background-color: rgba(255, 255, 255, 0.85);
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    flex: 1 1 calc(25% - 1rem); /* 4 type cards per row max */
+    min-width: 250px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Institutions inside type card */
+.institutions-list {
+    display: flex;
+    flex-direction: column; /* stack institution cards vertically */
+    gap: 0.5rem;
+    margin-top: 10px;
+}
+
+/* Institution card */
+.institutions-list .card {
+    background-color: rgba(200, 200, 200, 0.15);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Buttons inside institution card */
+.card-buttons {
+    margin-top: 5px;
 }
 
 /* Buttons */
 .button {
     background-color: #F7B334;
     border: none;
-    padding: 10px 15px;
+    padding: 7px 10px;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    text-decoration: none;
+    margin-right: 5px;
 }
 
 .button:hover {
     background-color: #EB691F;
+}
+
+.button.danger {
+    background-color: #e74c3c;
+}
+
+.button.danger:hover {
+    background-color: #c0392b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .type-card { flex: 1 1 calc(50% - 1rem); }
+}
+
+@media (max-width: 768px) {
+    .type-card { flex: 1 1 100%; }
 }
 
 /* Form inputs */
@@ -103,7 +131,7 @@ h1, h2, h3 {
     color: #C797C7;
 }
 
-/* Optional: accent colors */
+/* Accent colors */
 .accent-blue { color: #5DADE2; }
 .accent-light-blue { color: #85C1E9; }
 .accent-sky-blue { color: #5BC0DE; }

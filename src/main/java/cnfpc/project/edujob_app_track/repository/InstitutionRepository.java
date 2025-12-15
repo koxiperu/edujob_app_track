@@ -12,6 +12,7 @@ import cnfpc.project.edujob_app_track.model.Institution;
 public interface InstitutionRepository extends JpaRepository<Institution, Long>{
     List<Institution> findByType(InstitutionType type);
 
+
     List<Institution> findByCountry(String country);
 
     List<Institution> findByNameContainingIgnoreCase(String name);
