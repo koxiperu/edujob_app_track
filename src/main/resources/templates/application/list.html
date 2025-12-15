@@ -27,6 +27,12 @@
                     <p><strong>Institution:</strong> <span th:text="${app.institution.name}"></span></p>
                     <p><strong>Status:</strong> <span th:text="${app.status}"></span></p>
                     <p><strong>Submission Deadline:</strong> <span th:text="${app.submitDeadline}"></span></p>
+                    <p th:if="${!#lists.isEmpty(app.documents)}">
+                        <strong>Documents:</strong>
+                        <span th:each="doc : ${app.documents}">
+                            <a th:href="@{/documents/{id}/download(id=${doc.id})}" th:text="${doc.fileName}"></a><span th:if="${!#lists.isLast(doc, app.documents)}">, </span>
+                        </span>
+                    </p>
                     <div class="card-buttons">
                         <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="button">Edit</a>
                         <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
@@ -46,6 +52,12 @@
                     <p><strong>Institution:</strong> <span th:text="${app.institution.name}"></span></p>
                     <p><strong>Type:</strong> <span th:text="${app.applicationType}"></span></p>
                     <p><strong>Status:</strong> <span th:text="${app.status}"></span></p>
+                    <p th:if="${!#lists.isEmpty(app.documents)}">
+                        <strong>Documents:</strong>
+                        <span th:each="doc : ${app.documents}">
+                            <a th:href="@{/documents/{id}/download(id=${doc.id})}" th:text="${doc.fileName}"></a><span th:if="${!#lists.isLast(doc, app.documents)}">, </span>
+                        </span>
+                    </p>
                     <div class="card-buttons">
                         <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="button">Edit</a>
                         <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">

@@ -4,10 +4,12 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.DocumentStatus;
 import cnfpc.project.edujob_app_track.repository.DocumentRepository;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/documents")
@@ -28,7 +31,7 @@ public class DocumentController {
         this.documentRepository = documentRepository;
     }
 
-    /* LIST */
+    /* LIST ALL DOCUMENTS */
     @GetMapping
     public String list(Model model) {
         model.addAttribute("documents", documentRepository.findAll());
@@ -37,77 +40,96 @@ public class DocumentController {
         return "document/list";
     }
 
-    /* UPLOAD FORM */
+    /* CREATE FORM (optionally with returnUrl) */
     @GetMapping("/new")
-    public String uploadForm(Model model) {
+    public String newDocumentForm(@RequestParam(value = "returnUrl", required = false) String returnUrl,
+                                  Model model) {
         model.addAttribute("document", new Document());
         model.addAttribute("statuses", DocumentStatus.values());
-        model.addAttribute("title", "Upload Document");
+        model.addAttribute("returnUrl", returnUrl);
+        model.addAttribute("title", "Add Document");
         model.addAttribute("containerClass", "forms");
         return "document/form";
     }
-    
 
-    /* UPLOAD */
+    /* CREATE DOCUMENT */
     @PostMapping
-    public String upload(@RequestParam("file") MultipartFile file,
-                         @RequestParam("status") DocumentStatus status,
-                         Model model) throws IOException {
+    public String createDocument(@Valid @ModelAttribute Document document,
+                                 BindingResult result,
+                                 @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                                 @RequestParam(value = "file", required = false) MultipartFile file,
+                                 Model model) throws IOException {
 
-        if (file.isEmpty()) {
-            model.addAttribute("error", "File is required");
+        if (result.hasErrors()) {
+            model.addAttribute("statuses", DocumentStatus.values());
+            model.addAttribute("title", "Add Document");
             return "document/form";
         }
 
-        Document doc = new Document();
-        doc.setFileName(file.getOriginalFilename());
-        doc.setContentType(file.getContentType());
-        doc.setData(file.getBytes());
-        doc.setStatus(status);
+        if (file != null && !file.isEmpty()) {
+            document.setFileName(file.getOriginalFilename());
+            document.setContentType(file.getContentType());
+            document.setData(file.getBytes());
+        }
 
-        documentRepository.save(doc);
-
-        return "redirect:/documents";
+        documentRepository.save(document);
+        return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
     }
 
-    /* DELETE */
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        documentRepository.deleteById(id);
-        return "redirect:/documents";
-    }
-    
     /* EDIT FORM */
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editDocument(@PathVariable Long id,
+                               @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                               Model model) {
         Document doc = documentRepository.findById(id).orElseThrow();
         model.addAttribute("document", doc);
         model.addAttribute("statuses", DocumentStatus.values());
+        model.addAttribute("returnUrl", returnUrl);
         model.addAttribute("title", "Edit Document");
         model.addAttribute("containerClass", "forms");
         return "document/form";
     }
 
-    /* UPDATE */
+    /* UPDATE DOCUMENT */
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id,
-                        @RequestParam(value = "file", required = false) MultipartFile file,
-                        @RequestParam("status") DocumentStatus status,
-                        Model model) throws IOException {
+    public String updateDocument(@PathVariable Long id,
+                                 @Valid @ModelAttribute Document document,
+                                 BindingResult result,
+                                 @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                                 @RequestParam(value = "file", required = false) MultipartFile file,
+                                 Model model) throws IOException {
+
+        if (result.hasErrors()) {
+            model.addAttribute("statuses", DocumentStatus.values());
+            model.addAttribute("title", "Edit Document");
+            return "document/form";
+        }
 
         Document doc = documentRepository.findById(id).orElseThrow();
 
+        // Update file if provided
         if (file != null && !file.isEmpty()) {
             doc.setFileName(file.getOriginalFilename());
             doc.setContentType(file.getContentType());
             doc.setData(file.getBytes());
         }
 
-        doc.setStatus(status);
+        // Update other fields
+        doc.setStatus(document.getStatus());
         documentRepository.save(doc);
 
-        return "redirect:/documents";
+        return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
     }
+
+    /* DELETE DOCUMENT */
+    @PostMapping("/{id}/delete")
+    public String deleteDocument(@PathVariable Long id,
+                                 @RequestParam(value = "returnUrl", required = false) String returnUrl) {
+        documentRepository.deleteById(id);
+        return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
+    }
+
+    /* DOWNLOAD DOCUMENT */
     @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> download(@PathVariable Long id) {
         Document doc = documentRepository.findById(id).orElseThrow();

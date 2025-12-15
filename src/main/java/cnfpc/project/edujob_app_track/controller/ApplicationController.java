@@ -1,7 +1,9 @@
 package cnfpc.project.edujob_app_track.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -10,16 +12,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
+
 import cnfpc.project.edujob_app_track.model.Application;
+import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationType;
 import cnfpc.project.edujob_app_track.model.Enums.ResultStatus;
 import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.ApplicationRepository;
+import cnfpc.project.edujob_app_track.repository.DocumentRepository;
 import cnfpc.project.edujob_app_track.repository.InstitutionRepository;
 import cnfpc.project.edujob_app_track.repository.UserRepository;
+
 import jakarta.validation.Valid;
 
 @Controller
@@ -28,15 +34,19 @@ public class ApplicationController {
     private final ApplicationRepository applicationRepository;
     private final InstitutionRepository institutionRepository;
     private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
 
     public ApplicationController(ApplicationRepository applicationRepository,
                                  InstitutionRepository institutionRepository,
-                                 UserRepository userRepository) {
+                                 UserRepository userRepository,
+                                 DocumentRepository documentRepository) {
         this.applicationRepository = applicationRepository;
         this.institutionRepository = institutionRepository;
         this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
     }
 
+    /* LIST APPLICATIONS */
     @GetMapping
     public String list(Model model, Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElseThrow();
@@ -58,65 +68,29 @@ public class ApplicationController {
         return "application/list";
     }
 
-
     /* CREATE FORM */
     @GetMapping("/new")
-    public String createForm(Model model) {
+    public String createForm(@RequestParam(value = "returnUrl", required = false) String returnUrl,
+                             Model model) {
         model.addAttribute("application", new Application());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
         model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("returnUrl", "/applications/new");
+        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
         model.addAttribute("title", "Add Application");
         model.addAttribute("containerClass", "forms");
         return "application/form";
     }
 
-    /* CREATE */
+    /* CREATE APPLICATION */
     @PostMapping
     public String create(@Valid @ModelAttribute Application application,
                          BindingResult result,
                          Principal principal,
-                         Model model) {
-
-        if (result.hasErrors()) {
-            model.addAttribute("types", ApplicationType.values());
-            model.addAttribute("statuses", ApplicationStatus.values());
-            model.addAttribute("resultStatus", ResultStatus.values());
-            model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("title", "Add Application");
-            return "application/form";
-        }
-
-        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
-        application.setUser(user);
-        applicationRepository.save(application);
-
-        return "redirect:/applications";
-    }
-
-    /* EDIT FORM */
-    @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Application application = applicationRepository.findById(id).orElseThrow();
-
-        model.addAttribute("application", application);
-        model.addAttribute("types", ApplicationType.values());
-        model.addAttribute("statuses", ApplicationStatus.values());
-        model.addAttribute("responseStatuses", ResultStatus.values());
-        model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("returnUrl", "/applications/" + id + "/edit");
-        model.addAttribute("title", "Edit Application");
-        model.addAttribute("containerClass", "forms");
-        return "application/form";
-    }
-
-    /* UPDATE */
-    @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute Application application,
-                         BindingResult result,
+                         @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
+                         @RequestParam(value = "returnUrl", required = false) String returnUrl,
                          Model model) {
 
         if (result.hasErrors()) {
@@ -124,18 +98,84 @@ public class ApplicationController {
             model.addAttribute("statuses", ApplicationStatus.values());
             model.addAttribute("responseStatuses", ResultStatus.values());
             model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("returnUrl", "/applications/" + id + "/edit");
-            model.addAttribute("title", "Edit Application");
+            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("title", "Add Application");
+            model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
             return "application/form";
         }
 
-        application.setId(id);
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        application.setUser(user);
+
+        if (documentIds != null && !documentIds.isEmpty()) {
+            List<Document> docs = documentRepository.findAllById(documentIds);
+            application.setDocuments(docs);
+        } else {
+            application.setDocuments(new ArrayList<>());
+        }
+
         applicationRepository.save(application);
 
         return "redirect:/applications";
     }
 
-    /* DELETE */
+    /* EDIT FORM */
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id,
+                           @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                           Model model) {
+        Application application = applicationRepository.findById(id).orElseThrow();
+        if (application.getDocuments() == null) {
+            application.setDocuments(new ArrayList<>());
+        }
+
+        model.addAttribute("application", application);
+        model.addAttribute("types", ApplicationType.values());
+        model.addAttribute("statuses", ApplicationStatus.values());
+        model.addAttribute("responseStatuses", ResultStatus.values());
+        model.addAttribute("institutions", institutionRepository.findAll());
+        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
+        model.addAttribute("title", "Edit Application");
+        model.addAttribute("containerClass", "forms");
+        return "application/form";
+    }
+
+    /* UPDATE APPLICATION */
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable Long id,
+                         @Valid @ModelAttribute Application application,
+                         BindingResult result,
+                         @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
+                         @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                         Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("types", ApplicationType.values());
+            model.addAttribute("statuses", ApplicationStatus.values());
+            model.addAttribute("responseStatuses", ResultStatus.values());
+            model.addAttribute("institutions", institutionRepository.findAll());
+            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("title", "Edit Application");
+            model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
+            return "application/form";
+        }
+
+        application.setId(id);
+
+        if (documentIds != null && !documentIds.isEmpty()) {
+            List<Document> docs = documentRepository.findAllById(documentIds);
+            application.setDocuments(docs);
+        } else {
+            application.setDocuments(new ArrayList<>());
+        }
+
+        applicationRepository.save(application);
+
+        return "redirect:/applications";
+    }
+
+    /* DELETE APPLICATION */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         applicationRepository.deleteById(id);

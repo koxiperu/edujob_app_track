@@ -13,9 +13,12 @@
     <div class="card">
         <h1 th:text="${title}">Application Form</h1>
 
-        <form th:object="${application}" method="post" th:action="@{${application.id} != null ? '/applications/' + ${application.id} + '/edit' : '/applications'}" th:csrf="true">
+        <form th:object="${application}" method="post"
+              th:action="@{${application.id} != null ? '/applications/' + ${application.id} + '/edit' : '/applications'}"
+              th:csrf="true">
 
             <input type="hidden" th:field="*{id}" />
+
             <label>Title *</label>
             <input th:field="*{title}" required>
             <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
@@ -37,14 +40,38 @@
             <div style="display: flex; gap: 10px; align-items: center;">
                 <select th:field="*{institution}" required style="flex: 1;">
                     <option value="">-- Select institution --</option>
-                    <option th:each="inst : ${institutions}"
-                            th:value="${inst.id}"
-                            th:text="${inst.name}">
-                    </option>
+                    <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}"></option>
                 </select>
-                <a th:href="@{/institutions/new(returnUrl=${returnUrl})}"
-                class="button">
-                    + Add
+                <a th:href="@{/institutions/new(returnUrl=${returnUrl})}" class="button">+ Add</a>
+            </div>
+
+            <!-- Documents Section -->
+            <label>Documents</label>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+
+                <!-- Existing Documents List -->
+                <div th:if="${application.documents != null}" th:each="doc : ${application.documents}"
+                     style="display: flex; align-items: center; gap: 10px;">
+                    <span th:text="${doc.fileName}"></span>
+                    <span th:text="${doc.status}"></span>
+                    <a th:href="@{/documents/{id}/edit(id=${doc.id}, returnUrl=${returnUrl})}" class="button small">Edit</a>
+                    <form th:action="@{/documents/{id}/delete(id=${doc.id}, returnUrl=${returnUrl})}" method="post" style="display:inline">
+                        <button type="submit" class="button danger small">Delete</button>
+                    </form>
+                </div>
+
+                <!-- Add Existing Document -->
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="addDocumentSelect" style="flex: 1;">
+                        <option value="">-- Select document --</option>
+                        <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName}"></option>
+                    </select>
+                    <button type="button" class="button" onclick="addDocument()">+ Add Document</button>
+                </div>
+
+                <!-- Create New Document -->
+                <a th:href="@{/documents/new(returnUrl=${returnUrl})}" class="button">
+                    + Create New Document
                 </a>
             </div>
 
@@ -69,6 +96,31 @@
         </form>
     </div>
 </main>
+
+<script>
+    function addDocument() {
+        const select = document.getElementById('addDocumentSelect');
+        const docId = select.value;
+        const docText = select.options[select.selectedIndex].text;
+
+        if(!docId) return;
+
+        const form = document.querySelector('form');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'documentIds';
+        input.value = docId;
+        form.appendChild(input);
+
+        // Optionally: add a visual list
+        const container = select.parentElement.parentElement;
+        const div = document.createElement('div');
+        div.style.display = 'flex';
+        div.style.gap = '10px';
+        div.textContent = docText;
+        container.insertBefore(div, select.parentElement);
+    }
+</script>
 
 <div th:replace="fragments/footer :: footer"></div>
 </body>

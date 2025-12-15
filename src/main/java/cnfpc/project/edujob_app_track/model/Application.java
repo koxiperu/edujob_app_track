@@ -1,6 +1,8 @@
 package cnfpc.project.edujob_app_track.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
@@ -66,8 +68,11 @@ public class Application {
         joinColumns = @JoinColumn(name = "application_id"),
         inverseJoinColumns = @JoinColumn(name = "document_id")
     )
-    
-    private Set<Document> documents;
+    private List<Document> documents;
+
+    public Application() {
+        this.documents = new ArrayList<>();
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -155,14 +160,13 @@ public class Application {
         this.status = status;
     }
 
-    public Set<Document> getDocuments() {
+    public List<Document> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Set<Document> documents) {
+    public void setDocuments(List<Document> documents) {
         this.documents = documents;
     }
-
     public String getDescription() {
         return description;
     }
