@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} ?: 'Application Tracker'">Institutions</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Base layout fragments -->
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container user">
+
+    <div class="card">
+        <h1 th:text="${title}">Institutions</h1>
+        <a th:href="@{/institutions/new}" class="button">Add Institution</a>
+    </div>
+
+    <div class="types-grid">
+        <div class="type-card" th:each="entry : ${groupedInstitutions}" th:if="${!#lists.isEmpty(entry.value)}">
+            <h2 th:text="${entry.key}"></h2>
+
+            <div class="institutions-list">
+                <div class="card" th:each="inst : ${entry.value}">
+                    <h3 th:text="${inst.name}"></h3>
+                    <p><strong>Country:</strong> <span th:text="${inst.country}"></span></p>
+                    <p><strong>Phone:</strong> <span th:text="${inst.phone}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${inst.email}"></span></p>
+
+                    <div class="card-buttons">
+                        <a th:href="@{/institutions/{id}/edit(id=${inst.id})}" class="button">Edit</a>
+                        <form th:action="@{/institutions/{id}/delete(id=${inst.id})}" method="post" style="display:inline">
+                            <button type="submit" class="button danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

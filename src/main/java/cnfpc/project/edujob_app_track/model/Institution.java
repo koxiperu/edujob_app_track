@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "institutions")
@@ -24,9 +25,9 @@ public class Institution {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
-    private InstitutionType type; // Enum: UNIVERSITY, EMPLOYER, LYCEE, COURSE
+    private InstitutionType type;
 
     private String country;
     private String address;

@@ -1,6 +1,8 @@
 package cnfpc.project.edujob_app_track.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
@@ -17,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -44,6 +47,7 @@ public class Application {
     @Enumerated(EnumType.STRING)
     private ApplicationType applicationType; // JOB / UNIVERSITY / LYCEE / COURSE
 
+    @Column(updatable = false)
     private LocalDate creationDate;
     private LocalDate submitDate;
     private LocalDate submitDeadline;
@@ -64,9 +68,18 @@ public class Application {
         joinColumns = @JoinColumn(name = "application_id"),
         inverseJoinColumns = @JoinColumn(name = "document_id")
     )
-    
-    private Set<Document> documents;
+    private List<Document> documents;
 
+    public Application() {
+        this.documents = new ArrayList<>();
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.creationDate == null) {
+            this.creationDate = LocalDate.now();
+        }
+    }
     public Long getId() {
         return id;
     }
@@ -147,12 +160,35 @@ public class Application {
         this.status = status;
     }
 
-    public Set<Document> getDocuments() {
+    public List<Document> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(Set<Document> documents) {
+    public void setDocuments(List<Document> documents) {
         this.documents = documents;
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ResultStatus getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(ResultStatus responseStatus) {
+        this.responseStatus = responseStatus;
+    }
+
+    public String getResultNotes() {
+        return resultNotes;
+    }
+
+    public void setResultNotes(String resultNotes) {
+        this.resultNotes = resultNotes;
     }
 
     

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Document Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container forms">
+    <div class="card">
+        <h1 th:text="${title}">Document Form</h1>
+
+        <form th:object="${document}"
+            th:action="@{${document.id} != null ? '/documents/' + ${document.id} + '/edit' : '/documents'}"
+            method="post"
+            enctype="multipart/form-data"
+            th:csrf="true">
+
+            <input type="hidden" th:field="*{id}" />
+
+            <label>File <span th:if="${document.id == null}">*</span></label>
+            <input type="file" name="file" th:attr="required=${document.id == null}" />
+
+            <label>File Name</label>
+            <input type="text" th:field="*{fileName}" placeholder="Optional, will use uploaded file name if empty">
+
+            <label>Content Type</label>
+            <input type="text" th:field="*{contentType}" placeholder="e.g., pdf, docx, png">
+
+            <label>Status</label>
+            <select th:field="*{status}">
+                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+            </select>
+
+            <button type="submit" class="button" th:text="${document.id != null ? 'Update' : 'Upload'}"></button>
+        </form>
+
+
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
