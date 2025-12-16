@@ -61,6 +61,7 @@ public class Application {
 
     @Column(length = 2000)
     private String resultNotes;
+    
     // Many-to-Many: Application ↔ Document
     @ManyToMany
     @JoinTable(
@@ -68,11 +69,7 @@ public class Application {
         joinColumns = @JoinColumn(name = "application_id"),
         inverseJoinColumns = @JoinColumn(name = "document_id")
     )
-    private List<Document> documents;
-
-    public Application() {
-        this.documents = new ArrayList<>();
-    }
+    private List<Document> documents = new ArrayList<>();;
 
     @PrePersist
     protected void onCreate() {

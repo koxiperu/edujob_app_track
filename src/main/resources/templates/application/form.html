@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
     <title th:text="${title} ?: 'Application Tracker'">Application Tracker</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -47,33 +47,42 @@
 
             <!-- Documents Section -->
             <label>Documents</label>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
+            <p>Number of documents: <span th:text="${application.documents != null ? application.documents.size() : 0}"></span></p>
 
-                <!-- Existing Documents List -->
-                <div th:if="${application.documents != null}" th:each="doc : ${application.documents}"
-                     style="display: flex; align-items: center; gap: 10px;">
-                    <span th:text="${doc.fileName}"></span>
-                    <span th:text="${doc.status}"></span>
-                    <a th:href="@{/documents/{id}/edit(id=${doc.id}, returnUrl=${returnUrl})}" class="button small">Edit</a>
-                    <form th:action="@{/documents/{id}/delete(id=${doc.id}, returnUrl=${returnUrl})}" method="post" style="display:inline">
-                        <button type="submit" class="button danger small">Delete</button>
-                    </form>
-                </div>
-
-                <!-- Add Existing Document -->
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <select id="addDocumentSelect" style="flex: 1;">
-                        <option value="">-- Select document --</option>
-                        <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName}"></option>
-                    </select>
-                    <button type="button" class="button" onclick="addDocument()">+ Add Document</button>
-                </div>
-
-                <!-- Create New Document -->
-                <a th:href="@{/documents/new(returnUrl=${returnUrl})}" class="button">
-                    + Create New Document
-                </a>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <a th:href="@{/documents/new(returnUrl=${returnUrl})}" class="button">+ Create New Document</a>
             </div>
+
+            <!-- Documents Table -->
+            <table id="documentsTable" style="width: 80%; margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="doc: ${app_docs}">
+                        <td><input type="hidden" name="documentIds" th:value="${doc.id}" /></td>
+                        <td th:text="${doc.fileName}"></td>
+                        <td th:text="${doc.status != null ? doc.status : '-'}"></td>
+                        <td>
+                            <button type="button" class="button danger small" onclick="removeDocumentRow(this)">x</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Add Existing Document -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="addDocumentSelect" style="flex: 1;">
+                    <option value="">-- Select document --</option>
+                    <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName}" th:attr="data-status=${doc.status}"></option>
+                </select>
+                <button type="button" class="button" onclick="attachDocument()">Attach</button>
+            </div>
+
 
             <label>Submission Date</label>
             <input type="date" th:field="*{submitDate}">
@@ -97,30 +106,62 @@
     </div>
 </main>
 
-<script>
-    function addDocument() {
+<script th:inline="javascript">
+    function removeDocumentRow(button) {
+        const row = button.closest('tr');
+        // Remove hidden input
+        row.querySelectorAll('input[name="documentIds"]').forEach(i => i.remove());
+        // Remove row from table
+        row.remove();
+    }
+
+    function attachDocument() {
         const select = document.getElementById('addDocumentSelect');
         const docId = select.value;
-        const docText = select.options[select.selectedIndex].text;
+        const docName = select.options[select.selectedIndex].text;
+        const docStatus = select.options[select.selectedIndex].getAttribute('data-status') || '-';
+        if (!docId) return;
 
-        if(!docId) return;
+        const table = document.getElementById('documentsTable').querySelector('tbody');
 
-        const form = document.querySelector('form');
+        // Prevent duplicates
+        if ([...table.querySelectorAll('tr')].some(r => r.dataset.id === docId)) return;
+
+        const tr = document.createElement('tr');
+        tr.dataset.id = docId;
+
+        // Hidden input
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = 'documentIds';
         input.value = docId;
-        form.appendChild(input);
+        tr.appendChild(input);
 
-        // Optionally: add a visual list
-        const container = select.parentElement.parentElement;
-        const div = document.createElement('div');
-        div.style.display = 'flex';
-        div.style.gap = '10px';
-        div.textContent = docText;
-        container.insertBefore(div, select.parentElement);
+        // File name cell
+        const tdName = document.createElement('td');
+        tdName.textContent = docName;
+        tr.appendChild(tdName);
+
+        // Status cell
+        const tdStatus = document.createElement('td');
+        tdStatus.textContent = docStatus;
+        tr.appendChild(tdStatus);
+
+        // Action cell
+        const tdAction = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'button danger small';
+        btn.textContent = 'x';
+        btn.onclick = () => removeDocumentRow(btn);
+        tdAction.appendChild(btn);
+        tr.appendChild(tdAction);
+
+        table.appendChild(tr);
     }
+
 </script>
+
 
 <div th:replace="fragments/footer :: footer"></div>
 </body>

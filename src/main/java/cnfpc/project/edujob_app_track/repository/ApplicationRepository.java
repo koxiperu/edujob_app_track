@@ -1,8 +1,11 @@
 package cnfpc.project.edujob_app_track.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import cnfpc.project.edujob_app_track.model.Application;
@@ -22,4 +25,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>{
     List<Application> findByUserAndResponseStatus(User user, ResultStatus resultStatus);
     List<Application> findByUserAndStatusAndResponseStatus(User user, ApplicationStatus status, ResultStatus resultStatus);
     List<Application> findByStatusAndResponseStatus(ApplicationStatus status, ResultStatus resultStatus);
+
+    @Query("SELECT a FROM Application a LEFT JOIN FETCH a.documents WHERE a.id = :id")
+    Optional<Application> findByIdWithDocuments(@Param("id") Long id);
 }
