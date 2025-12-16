@@ -1,6 +1,8 @@
 package cnfpc.project.edujob_app_track.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import cnfpc.project.edujob_app_track.model.Enums.DocumentStatus;
@@ -40,7 +42,7 @@ public class Document {
 
     // Many-to-Many: Document ↔ Application
     @ManyToMany(mappedBy = "documents")
-    private Set<Application> applications;
+    private List<Application> applications = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -90,13 +92,26 @@ public class Document {
         this.status = status;
     }
 
-    public Set<Application> getApplications() {
+    public List<Application> getApplications() {
         return applications;
     }
 
-    public void setApplications(Set<Application> applications) {
+    public void setApplications(List<Application> applications) {
         this.applications = applications;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Document)) return false;
+        return id != null && id.equals(((Document) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    
     
 }

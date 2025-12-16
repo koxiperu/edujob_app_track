@@ -107,7 +107,7 @@ public class ApplicationController {
         User user = userRepository.findByUsername(principal.getName()).orElseThrow();
         application.setUser(user);
 
-        if (documentIds != null && !documentIds.isEmpty()) {
+        if (documentIds != null) {
             List<Document> docs = documentRepository.findAllById(documentIds);
             application.setDocuments(docs);
         } else {
@@ -124,12 +124,11 @@ public class ApplicationController {
     public String editForm(@PathVariable Long id,
                            @RequestParam(value = "returnUrl", required = false) String returnUrl,
                            Model model) {
-        Application application = applicationRepository.findById(id).orElseThrow();
-        if (application.getDocuments() == null) {
-            application.setDocuments(new ArrayList<>());
-        }
+        Application application = applicationRepository.findByIdWithDocuments(id).orElseThrow();
+        System.out.println("Documents count: " + application.getDocuments().size());
 
         model.addAttribute("application", application);
+        model.addAttribute("app_docs", application.getDocuments());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
@@ -144,7 +143,7 @@ public class ApplicationController {
     /* UPDATE APPLICATION */
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute Application application,
+                         @Valid @ModelAttribute Application formApplication,
                          BindingResult result,
                          @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
@@ -161,19 +160,32 @@ public class ApplicationController {
             return "application/form";
         }
 
-        application.setId(id);
+        Application existing = applicationRepository.findByIdWithDocuments(id).orElseThrow();
+        existing.setTitle(formApplication.getTitle());
+        existing.setDescription(formApplication.getDescription());
+        existing.setApplicationType(formApplication.getApplicationType());
+        existing.setStatus(formApplication.getStatus());
+        existing.setInstitution(formApplication.getInstitution());
+        existing.setSubmitDate(formApplication.getSubmitDate());
+        existing.setSubmitDeadline(formApplication.getSubmitDeadline());
+        existing.setResponseDeadline(formApplication.getResponseDeadline());
+        existing.setResponseStatus(formApplication.getResponseStatus());
+        existing.setResultNotes(formApplication.getResultNotes());
 
         if (documentIds != null && !documentIds.isEmpty()) {
-            List<Document> docs = documentRepository.findAllById(documentIds);
-            application.setDocuments(docs);
-        } else {
-            application.setDocuments(new ArrayList<>());
+            List<Document> newDocs = documentRepository.findAllById(documentIds);
+            existing.setDocuments(newDocs); // ✅ SAFE NOW
+        }else {
+            existing.setDocuments(new ArrayList<>());
         }
 
-        applicationRepository.save(application);
+
+        applicationRepository.save(existing);
 
         return "redirect:/applications";
     }
+
+
 
     /* DELETE APPLICATION */
     @PostMapping("/{id}/delete")
