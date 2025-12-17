@@ -4,7 +4,9 @@ body, html{
 }
 
 .bg-image.bg-body {
-    background: url("/images/form-bg.jpg");
+    background: url("/images/form-bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 h2 {
