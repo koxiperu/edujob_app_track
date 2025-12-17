@@ -2,42 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${title}">Document Form</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom form CSS -->
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
+
+<body class="bg-image bg-body">
 
 <div th:replace="fragments/header :: header"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="container forms">
-    <div class="card">
-        <h1 th:text="${title}">Document Form</h1>
+<main class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-orange form-shell" style="width: 100%; max-width: 600px;">
+
+        <h2 class="text-center mb-4" th:text="${title}">Document Form</h2>
 
         <form th:object="${document}"
-            th:action="@{${document.id} != null ? '/documents/' + ${document.id} + '/edit' : '/documents'}"
-            method="post"
-            enctype="multipart/form-data"
-            th:csrf="true">
+              th:action="@{${document.id} != null ? '/documents/' + ${document.id} + '/edit' : '/documents'}"
+              method="post"
+              enctype="multipart/form-data"
+              th:csrf="true">
 
             <input type="hidden" th:field="*{id}" />
 
-            <label>File <span th:if="${document.id == null}">*</span></label>
-            <input type="file" name="file" th:attr="required=${document.id == null}" />
+            <!-- File -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">
+                    File <span th:if="${document.id == null}" class="text-danger">*</span>
+                </label>
+                <input type="file"
+                       name="file"
+                       class="form-control"
+                       th:attr="required=${document.id == null}" />
+            </div>
 
-            <label>File Name</label>
-            <input type="text" th:field="*{fileName}" placeholder="Optional, will use uploaded file name if empty">
+            <!-- File Name -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">File Name</label>
+                <input type="text"
+                       th:field="*{fileName}"
+                       class="form-control"
+                       placeholder="Optional, will use uploaded file name if empty">
+            </div>
 
-            <label>Content Type</label>
-            <input type="text" th:field="*{contentType}" placeholder="e.g., pdf, docx, png">
+            <!-- Content Type -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Content Type</label>
+                <input type="text"
+                       th:field="*{contentType}"
+                       class="form-control"
+                       placeholder="e.g., pdf, docx, png">
+            </div>
 
-            <label>Status</label>
-            <select th:field="*{status}">
-                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-            </select>
+            <!-- Status -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Status</label>
+                <select th:field="*{status}" class="form-select">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s}">
+                    </option>
+                </select>
+            </div>
 
-            <button type="submit" class="button" th:text="${document.id != null ? 'Update' : 'Upload'}"></button>
+            <!-- Submit -->
+            <div class="d-grid">
+                <button type="submit"
+                        class="btn submit-button"
+                        th:text="${document.id != null ? 'Update' : 'Upload'}">
+                </button>
+            </div>
+
         </form>
-
 
     </div>
 </main>

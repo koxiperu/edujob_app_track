@@ -1,4 +1,138 @@
-<div th:fragment="header" class="header">
-    <h1>Application Tracker</h1>
-</div>
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="header"
+     class="app-header">
 
+    <style>
+        /* =========================
+           GLOBAL HEADER / NAVBAR
+           ========================= */
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 12px 32px;
+            background-color: #f4efda;
+            border-bottom: 1px solid #ddd;
+
+            position: relative;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        /* LEFT SIDE */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .app-logo {
+            height: 56px;
+            width: auto;
+            border-radius: 8px;
+        }
+
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: rgb(93, 3, 149);
+            line-height: 1.2;
+        }
+
+        .app-slogan {
+            font-size: 0.9rem;
+            color: rgb(62, 110, 98);
+            margin-top: 2px;
+        }
+
+        /* RIGHT SIDE */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Profile avatar */
+
+        .user-badge:hover {
+            transform: scale(1.05);
+        }
+        /* Profile avatar with username overlay */
+        .user-badge {
+            position: relative;     /* container for absolute username */
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            box-shadow: 0 0 12px rgb(138, 237, 212);
+            transition: transform 0.2s ease;
+        }
+
+        .user-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-badge:hover {
+            transform: scale(1.1);
+        }
+        .user-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        /* Username text */
+        .username-text {
+            position: absolute;      /* absolute inside badge */
+            top: 50%;                /* vertically center */
+            left: 50%;               /* horizontally center */
+            transform: translate(-50%, -50%);
+            z-index: 2;              /* in front of avatar */
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: rgb(43, 0, 67);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+    <!-- LEFT -->
+    <div class="header-left">
+        <img src="/images/logo.jpg" alt="Logo" class="app-logo"/>
+
+        <div class="title-container">
+            <div class="app-title">EduJob Application Tracker</div>
+            <div class="app-slogan">Manage your future, one application at a time</div>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="header-right">
+        <a th:href="@{/user/profile}" class="user-link" title="My profile">
+            <span class="user-badge" style="position: relative;">
+                <img src="/images/profile-icon.jpg" alt="Profile"/>
+                <span class="username-text" sec:authentication="name"></span>
+            </span>
+        </a>
+
+        <a th:href="@{/logout}" class="btn btn-danger">
+            Logout
+        </a>
+    </div>
+
+</div>

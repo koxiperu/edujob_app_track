@@ -1,0 +1,72 @@
+/* list.css: custom styling for list pages */
+h1.mb-0 {
+    font-weight: bold; 
+    font-size: 3rem;                   /* bold text */
+    color: rgb(93, 3, 149);  
+    text-transform: uppercase;             /* dark purple */
+    text-shadow: 2px 2px 4px rgb(138, 237, 212); /* soft cyan shadow */
+}
+/* Background image */
+.bg-image.bg-body {
+    background: url("/images/list-bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Optional: all buttons with consistent submit-button style */
+.submit-button {
+    background-color: rgb(93, 3, 149);
+    color: #ffffff;  
+    font-weight: 800;
+}
+.submit-button:hover {
+    background-color: rgb(43, 0, 67); /* darker purple on hover */
+    color: #ffffff;
+}
+/* Table row hover highlight */
+.table-hover tbody tr:hover {
+    background-color: rgb(43, 0, 67);
+    color: #ffffff;
+}
+
+.btn.download-button {
+    background-color: #ae81b5; /* dust-rose */
+    color: white;
+    font-weight: bold;
+}
+
+.shadow-orange {
+    box-shadow: 0 0 2rem rgb(138, 237, 212)
+}
+
+/* Optional: hover effect for download button */
+.btn.download-button:hover {
+    background-color: #7c5b81;
+    color: white;
+}
+/* Documents buttons in table */
+/* Table titles like Documents page */
+.table-title {
+    font-weight: bold;
+    color: rgb(93, 3, 149);
+    text-shadow: 2px 2px 4px rgb(138, 237, 212);
+    margin-bottom: 0.75rem;
+}
+
+/* Documents buttons in table (stacked, ellipsis) */
+.btn-doc-stack {
+    width: 80px;                /* fixed width */
+    white-space: nowrap;        /* prevent wrapping */
+    overflow: hidden;           /* hide overflow */
+    text-overflow: ellipsis;    /* show "..." if text too long */
+    display: block;             /* stack vertically */
+    margin-bottom: 4px;         /* spacing between buttons */
+    font-size: 0.75rem;         /* smaller font to fit */
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+}
+.container.my-5.wid {
+    width: 80% !important; 
+    max-width: 80% !important;
+}
+
+

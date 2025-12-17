@@ -1,13 +1,136 @@
-<nav th:fragment="navbar" class="navbar" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <a th:href="@{/dashboard}">Dashboard</a>
-    <a th:href="@{/applications}">Applications</a>
-    <a th:href="@{/institutions}">Institutions</a>
-    <a th:href="@{/documents}">Documents</a>
-    <a th:href="@{/user/profile}">Profile</a>
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="navbar">
 
-    <span class="nav-right">
-        <span sec:authentication="name"></span>
-        <a th:href="@{/logout}">Logout</a>
-    </span>
-</nav>
+    <style>
+        /* =========================
+           COLLAPSIBLE VERTICAL NAVBAR
+           ========================= */
+        .nav-container {
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
+        /* MENU BUTTON */
+        .menu-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: rgb(93, 3, 149);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 180px;  /* fixed width for button and navbar */
+            margin: 0 16px;
+            transition: background-color 0.2s ease;
+            z-index: 1001; /* above content */
+        }
+
+        .menu-button:hover {
+            background-color: rgb(43, 0, 67);
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 2px;
+            background-color: #fff;
+            display: block;
+            position: relative;
+        }
+
+        .menu-icon::before,
+        .menu-icon::after {
+            content: '';
+            width: 20px;
+            height: 2px;
+            background-color: #fff;
+            position: absolute;
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-icon::before {
+            top: -6px;
+        }
+
+        .menu-icon::after {
+            top: 6px;
+        }
+
+        /* NAV LINKS */
+        .nav-links {
+            display: none;
+            flex-direction: column; /* vertical */
+            gap: 8px;
+            padding: 16px 0;
+            background-color: #f4efda;
+            width: 180px; /* same as menu button */
+            position: absolute;
+            top: 100%; /* below menu button */
+            left: 16px; /* align under menu button */
+            height: 100vh; /* full page height */
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 700;
+            color: rgb(43, 0, 67);
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgb(93, 3, 149);
+            color: #fff;
+        }
+
+        /* OPEN STATE */
+        .nav-container.open .nav-links {
+            display: flex;
+        }
+
+        /* Hamburger animation */
+        .nav-container.open .menu-icon {
+            background-color: transparent;
+        }
+
+        .nav-container.open .menu-icon::before {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-container.open .menu-icon::after {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+    </style>
+
+    <div class="nav-container" id="navContainer">
+        <button class="menu-button" onclick="toggleNav()">
+            <span class="menu-icon"></span>
+            Menu
+        </button>
+
+        <div class="nav-links" id="navLinks">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/applications}">Applications</a>
+            <a th:href="@{/institutions}">Institutions</a>
+            <a th:href="@{/documents}">Documents</a>
+            <a th:href="@{/user/profile}">Profile</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleNav() {
+            const container = document.getElementById('navContainer');
+            container.classList.toggle('open');
+        }
+    </script>
+</div>
