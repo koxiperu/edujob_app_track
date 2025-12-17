@@ -9,6 +9,14 @@ main {
     flex: 1; /* takes remaining space */
 }
 
+h1.mb-0 {
+    font-weight: bold; 
+    font-size: 3rem;                   /* bold text */
+    color: rgb(93, 3, 149);  
+    text-transform: uppercase;             /* dark purple */
+    text-shadow: 2px 2px 4px rgb(138, 237, 212); /* soft cyan shadow */
+}
+
 /* Background image for profile page */
 .bg-profile {
     background: url("/images/profile-bg.jpg") no-repeat fixed;

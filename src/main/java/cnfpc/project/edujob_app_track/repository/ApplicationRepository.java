@@ -26,10 +26,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>{
     List<Application> findByUserAndStatusAndResponseStatus(User user, ApplicationStatus status, ResultStatus resultStatus);
     List<Application> findByStatusAndResponseStatus(ApplicationStatus status, ResultStatus resultStatus);
 
-    @Query("SELECT a FROM Application a LEFT JOIN FETCH a.documents WHERE a.id = :id")
-    Optional<Application> findByIdWithDocuments(@Param("id") Long id);
-
     List<Application> findByUserAndApplicationType(User user, ApplicationType type);
     List<Application> findByUserAndStatusAndApplicationType(User user, ApplicationStatus status, ApplicationType type);
+
+    @Query("SELECT a FROM Application a LEFT JOIN FETCH a.documents LEFT JOIN FETCH a.institution WHERE a.id = :id")
+    Optional<Application> findByIdWithDocuments(@Param("id") Long id);
 
 }
