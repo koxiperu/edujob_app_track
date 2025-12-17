@@ -1,0 +1,34 @@
+body, html{
+    height: 100%;
+    margin: 0;
+}
+
+.bg-image.bg-body {
+    background: url("/images/form-bg.jpg");
+}
+
+h2 {
+    color: rgb(93, 3, 149);
+}
+
+.shadow-orange {
+    box-shadow: 0 0 2rem rgb(138, 237, 212)
+}
+.submit-button {
+    background-color : rgb(93, 3, 149);
+    color: #ffffff;  
+    font-weight: 800;
+}
+.submit-button:hover {
+    background-color: rgb(43, 0, 67);
+    color: #ffffff;
+}
+
+/* ===== Outer form container color ===== */
+.card.form-shell {
+    background-color: #efedf9 !important; /* sky-blue */
+    border: none;
+}
+.form-section {
+    background-color: #ffffff !important;
+}

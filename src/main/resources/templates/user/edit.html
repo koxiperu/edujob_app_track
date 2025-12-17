@@ -3,78 +3,61 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${title}">Edit Profile</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom form CSS -->
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
-
-<!-- Header -->
-<div class="header">
-    <h1>Application Tracker</h1>
-</div>
-
-<!-- Navbar -->
-<div class="navbar">
-    <a th:href="@{/dashboard}">Dashboard</a>
-    <a th:href="@{/applications}">Applications</a>
-    <a th:href="@{/institutions}">Institutions</a>
-    <a th:href="@{/documents}">Documents</a>
-    <a th:href="@{/user/profile}">Profile</a>
-    <span class="nav-right">
-        <span th:text="${user.username}"></span>
-        <a th:href="@{/logout}">Logout</a>
-    </span>
-</div>
-
-<!-- Main Content -->
-<main class="container forms">
-    <div class="card">
-        <h2>Edit Profile</h2>
+<body class="bg-image bg-body">
+<!-- Base layout fragments -->
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+<main class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-orange form-shell" style="width: 100%; max-width: 500px;">
+        <h2 class="text-center mb-4">Edit Profile</h2>
 
         <form th:action="@{/user/edit}" th:object="${user}" method="post" th:csrf="true">
-            <!-- Hidden ID field -->
+            <!-- Hidden fields -->
             <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{username}">
-            <input type="hidden" th:field="*{password}">
+            <input type="hidden" th:field="*{username}" />
+            <input type="hidden" th:field="*{password}" />
 
-            <div>
-                <label>First Name</label>
-                <input type="text" th:field="*{firstName}" required />
-                <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" style="color:red"></p>
+            <div class="border p-3 mb-3 form-section" >
+                <label class="form-label">First Name</label>
+                <input type="text" th:field="*{firstName}" class="form-control" required />
+                <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></p>
             </div>
 
-            <div>
-                <label>Last Name</label>
-                <input type="text" th:field="*{lastName}" required />
-                <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" style="color:red"></p>
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="form-control" required />
+                <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></p>
             </div>
 
-            <div>
-                <label>Email</label>
-                <input type="email" th:field="*{email}" required />
-                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></p>
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Email</label>
+                <input type="email" th:field="*{email}" class="form-control" required />
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></p>
             </div>
 
-            <div>
-                <label>Phone</label>
-                <input type="text" th:field="*{phone}" />
-                <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red"></p>
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Phone</label>
+                <input type="text" th:field="*{phone}" class="form-control" />
+                <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-danger"></p>
             </div>
 
-            <div>
-                <label>Birth Date</label>
-                <input type="date" th:field="*{birthDate}" />
-                <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" style="color:red"></p>
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Birth Date</label>
+                <input type="date" th:field="*{birthDate}" class="form-control" />
+                <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-danger"></p>
             </div>
 
-            <button type="submit" class="button">Save Changes</button>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary submit-button">Save Changes</button>
+            </div>
         </form>
     </div>
 </main>
-
-<!-- Footer -->
-<div class="footer">
-    <p>© 2025 Application Tracker</p>
-</div>
-
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

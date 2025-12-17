@@ -2,16 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
     <title th:text="${title} ?: 'Application Tracker'">Application Tracker</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Shared form styling -->
+    <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
-<body>
+
+<body class="bg-image bg-body">
 
 <div th:replace="fragments/header :: header"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="container forms">
-    <div class="card">
-        <h1 th:text="${title}">Application Form</h1>
+<main class="container d-flex justify-content-center align-items-center my-5">
+    <div class="card p-4 shadow-orange w-100 form-shell" style="max-width: 900px;">
+
+        <h2 class="text-center mb-4" th:text="${title}">Application Form</h2>
 
         <form th:object="${application}" method="post"
               th:action="@{${application.id} != null ? '/applications/' + ${application.id} + '/edit' : '/applications'}"
@@ -19,99 +26,154 @@
 
             <input type="hidden" th:field="*{id}" />
 
-            <label>Title *</label>
-            <input th:field="*{title}" required>
-            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+            <!-- SECTION: Title -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Title *</label>
+                <input th:field="*{title}" class="form-control" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
 
-            <label>Description</label>
-            <textarea th:field="*{description}"></textarea>
+            <!-- SECTION: Description -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Description</label>
+                <textarea th:field="*{description}" class="form-control"></textarea>
+            </div>
 
-            <label>Type *</label>
-            <select th:field="*{applicationType}" required>
-                <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
-            </select>
-
-            <label>Status *</label>
-            <select th:field="*{status}" required>
-                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-            </select>
-
-            <label>Institution *</label>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <select th:field="*{institution}" required style="flex: 1;">
-                    <option value="">-- Select institution --</option>
-                    <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}"></option>
+            <!-- SECTION: Type -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Type *</label>
+                <select th:field="*{applicationType}" class="form-select" required>
+                    <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
                 </select>
-                <a th:href="@{/institutions/new(returnUrl=${returnUrl})}" class="button">+ Add</a>
             </div>
 
-            <!-- Documents Section -->
-            <label>Documents</label>
-            <p>Number of documents: <span th:text="${application.documents != null ? application.documents.size() : 0}"></span></p>
-
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                <a th:href="@{/documents/new(returnUrl=${returnUrl})}" class="button">+ Create New Document</a>
-            </div>
-
-            <!-- Documents Table -->
-            <table id="documentsTable" style="width: 80%; margin-bottom: 10px;">
-                <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="doc: ${app_docs}">
-                        <td><input type="hidden" name="documentIds" th:value="${doc.id}" /></td>
-                        <td th:text="${doc.fileName}"></td>
-                        <td th:text="${doc.status != null ? doc.status : '-'}"></td>
-                        <td>
-                            <button type="button" class="button danger small" onclick="removeDocumentRow(this)">x</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Add Existing Document -->
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <select id="addDocumentSelect" style="flex: 1;">
-                    <option value="">-- Select document --</option>
-                    <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName}" th:attr="data-status=${doc.status}"></option>
+            <!-- SECTION: Status -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Status *</label>
+                <select th:field="*{status}" class="form-select" required>
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
                 </select>
-                <button type="button" class="button" onclick="attachDocument()">Attach</button>
             </div>
 
+            <!-- SECTION: Institution -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Institution *</label>
+                <div class="d-flex gap-2">
+                    <select th:field="*{institution}" class="form-select" required>
+                        <option value="">-- Select institution --</option>
+                        <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}"></option>
+                    </select>
+                    <a th:href="@{/institutions/new(returnUrl=${returnUrl})}"
+                       class="btn submit-button text-white">
+                        + Create new institution
+                    </a>
+                </div>
+            </div>
 
-            <label>Submission Date</label>
-            <input type="date" th:field="*{submitDate}">
+            <!-- SECTION: Documents -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Documents</label>
 
-            <label>Submission Deadline</label>
-            <input type="date" th:field="*{submitDeadline}">
+                <!-- Table and Create New Document Button -->
+                <div class="d-flex gap-2  align-items-center">
+                    <!-- Documents Table -->
+                    <table id="documentsTable" class="table table-bordered table-sm mb-0 flex-fill">
+                        <thead class="table-light">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Status</th>
+                                <th style="width: 80px;">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="doc: ${app_docs}">
+                                <td>
+                                    <input type="hidden" name="documentIds" th:value="${doc.id}" />
+                                    <span th:text="${doc.fileName}"></span>
+                                </td>
+                                <td th:text="${doc.status != null ? doc.status : '-'}"></td>
+                                <td class="text-center">
+                                    <button type="button"
+                                            class="btn submit-button text-white btn-sm"
+                                            onclick="removeDocumentRow(this)">
+                                        x
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <label>Response Deadline</label>
-            <input type="date" th:field="*{responseDeadline}">
+                    <!-- Create New Document Button -->
+                    <a th:href="@{/documents/new(returnUrl=${returnUrl})}"
+                    class="btn submit-button text-white">
+                        + Create New Document
+                    </a>
+                </div>
 
-            <label>Response Status</label>
-            <select th:field="*{responseStatus}">
-                <option th:each="rs : ${responseStatuses}" th:value="${rs}" th:text="${rs}"></option>
-            </select>
+                <!-- Attach Existing -->
+                <div class="d-flex gap-2 mt-3">
+                    <select id="addDocumentSelect" class="form-select">
+                        <option value="">-- Select document --</option>
+                        <option th:each="doc : ${documents}"
+                                th:value="${doc.id}"
+                                th:text="${doc.fileName}"
+                                th:attr="data-status=${doc.status}">
+                        </option>
+                    </select>
+                    <button type="button"
+                            class="btn submit-button text-white"
+                            onclick="attachDocument()">
+                        Attach
+                    </button>
+                </div>
+            </div>
 
-            <label>Result Notes</label>
-            <textarea th:field="*{resultNotes}"></textarea>
+            <!-- SECTION: Submission Dates -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Submission Date</label>
+                <input type="date" th:field="*{submitDate}" class="form-control">
+            </div>
 
-            <button type="submit" class="button">Save</button>
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Submission Deadline</label>
+                <input type="date" th:field="*{submitDeadline}" class="form-control">
+            </div>
+
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Response Deadline</label>
+                <input type="date" th:field="*{responseDeadline}" class="form-control">
+            </div>
+
+            <!-- SECTION: Response Status -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Response Status</label>
+                <select th:field="*{responseStatus}" class="form-select">
+                    <option th:each="rs : ${responseStatuses}" th:value="${rs}" th:text="${rs}"></option>
+                </select>
+            </div>
+
+            <!-- SECTION: Notes -->
+            <div class="border p-3 mb-3 form-section">
+                <label class="form-label">Result Notes</label>
+                <textarea th:field="*{resultNotes}" class="form-control"></textarea>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="border p-3 mb-3 form-section">
+                <button type="submit" class="btn submit-button text-white">
+                    Save
+                </button>
+            </div>
+
         </form>
     </div>
 </main>
 
+<!-- JS UNCHANGED -->
 <script th:inline="javascript">
     function removeDocumentRow(button) {
         const row = button.closest('tr');
-        // Remove hidden input
         row.querySelectorAll('input[name="documentIds"]').forEach(i => i.remove());
-        // Remove row from table
         row.remove();
     }
 
@@ -130,28 +192,28 @@
         const tr = document.createElement('tr');
         tr.dataset.id = docId;
 
-        // Hidden input
+        // Hidden input + File Name
+        const tdName = document.createElement('td');
+        tdName.className = ""; // same as existing table, you can add table-cell styling if needed
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = 'documentIds';
         input.value = docId;
-        tr.appendChild(input);
-
-        // File name cell
-        const tdName = document.createElement('td');
-        tdName.textContent = docName;
+        tdName.appendChild(input);
+        tdName.appendChild(document.createTextNode(docName));
         tr.appendChild(tdName);
 
-        // Status cell
+        // Status
         const tdStatus = document.createElement('td');
         tdStatus.textContent = docStatus;
         tr.appendChild(tdStatus);
 
-        // Action cell
+        // Action button
         const tdAction = document.createElement('td');
+        tdAction.className = "text-center";
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'button danger small';
+        btn.className = 'btn submit-button text-white btn-sm'; // same as existing
         btn.textContent = 'x';
         btn.onclick = () => removeDocumentRow(btn);
         tdAction.appendChild(btn);
@@ -161,7 +223,6 @@
     }
 
 </script>
-
 
 <div th:replace="fragments/footer :: footer"></div>
 </body>
