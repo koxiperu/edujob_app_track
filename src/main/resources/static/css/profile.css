@@ -1,3 +1,14 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport height */
+    margin: 0;
+}
+
+main {
+    flex: 1; /* takes remaining space */
+}
+
 /* Background image for profile page */
 .bg-profile {
     background: url("/images/profile-bg.jpg") no-repeat fixed;

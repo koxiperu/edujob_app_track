@@ -1,4 +1,30 @@
-<footer th:fragment="footer" class="footer">
-    <p>© 2025 Application Tracker</p>
-</footer>
+<footer th:fragment="footer" class="app-footer">
 
+    <style>
+        /* =========================
+           FOOTER STYLE
+           ========================= */
+        .app-footer {
+            width: 100%;
+            background-color: #f4efda; /* same as header background */
+            border-top: 1px solid #ddd;
+            padding: 8px 16px; /* thinner padding */
+            font-weight: 600;
+            color: rgb(93, 3, 149);
+            box-sizing: border-box;
+
+            /* Center content vertically & horizontally */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            /* Stick to bottom */
+            position: sticky;
+            bottom: 0;
+            z-index: 500;
+            width: 100%;
+        }
+    </style>
+
+    <p style="margin:0;">© 2025 EduJob Application Tracker</p>
+</footer>
