@@ -197,15 +197,14 @@ public class ApplicationController {
 
     @GetMapping("/{id}/details")
     public String viewApplicationDetails(@PathVariable Long id, Model model) {
-        Optional<Application> appOpt = applicationRepository.findByIdWithDocuments(id);
-        if (appOpt.isEmpty()) {
+        Application application = applicationRepository.findByIdWithDocuments(id).orElseThrow();;
+        if (application==null) {
             // Optionally handle not found
             return "redirect:/applications"; 
         }
 
-        Application app = appOpt.get();
         model.addAttribute("title", "Application Details");
-        model.addAttribute("application", app);
+        model.addAttribute("app", application);
         return "application/details";
     }
 }
