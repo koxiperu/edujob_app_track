@@ -74,9 +74,13 @@ public class DocumentController {
         }
 
         if (file != null && !file.isEmpty()) {
-            document.setFileName(file.getOriginalFilename());
-            document.setContentType(file.getContentType());
             document.setData(file.getBytes());
+            if (document.getFileName() == null || document.getFileName().isBlank()) {
+                document.setFileName(file.getOriginalFilename());
+            }
+            if (document.getContentType() == null || document.getContentType().isBlank()) {
+                document.setContentType(file.getContentType());
+            }
         }
 
         User currentUser = userService.getLoggedInUser();
@@ -122,9 +126,13 @@ public class DocumentController {
         Document doc = documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
         // Update file if provided
         if (file != null && !file.isEmpty()) {
-            doc.setFileName(file.getOriginalFilename());
-            doc.setContentType(file.getContentType());
-            doc.setData(file.getBytes());
+            document.setData(file.getBytes());
+            if (document.getFileName() == null || document.getFileName().isBlank()) {
+                document.setFileName(file.getOriginalFilename());
+            }
+            if (document.getContentType() == null || document.getContentType().isBlank()) {
+                document.setContentType(file.getContentType());
+            }
         }
 
         // Update other fields

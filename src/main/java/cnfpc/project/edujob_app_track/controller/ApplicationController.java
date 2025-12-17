@@ -72,13 +72,14 @@ public class ApplicationController {
     /* CREATE FORM */
     @GetMapping("/new")
     public String createForm(@RequestParam(value = "returnUrl", required = false) String returnUrl,
-                             Model model) {
+                             Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         model.addAttribute("application", new Application());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
-        model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("institutions", institutionRepository.findAllByUser(user));
         model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
         model.addAttribute("title", "Add Application");
         model.addAttribute("containerClass", "forms");
@@ -93,19 +94,17 @@ public class ApplicationController {
                          @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
                          Model model) {
-
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         if (result.hasErrors()) {
             model.addAttribute("types", ApplicationType.values());
             model.addAttribute("statuses", ApplicationStatus.values());
             model.addAttribute("responseStatuses", ResultStatus.values());
-            model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("institutions", institutionRepository.findAllByUser(user));
             model.addAttribute("title", "Add Application");
             model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
             return "application/form";
         }
-
-        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
         application.setUser(user);
 
         if (documentIds != null) {
@@ -124,17 +123,16 @@ public class ApplicationController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id,
                            @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                           Model model) {
+                           Model model, Principal principal) {
         Application application = applicationRepository.findByIdWithDocuments(id).orElseThrow();
-        System.out.println("Documents count: " + application.getDocuments().size());
-
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         model.addAttribute("application", application);
         model.addAttribute("app_docs", application.getDocuments());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
-        model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("institutions", institutionRepository.findAllByUser(user));
         model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
         model.addAttribute("title", "Edit Application");
         model.addAttribute("containerClass", "forms");
@@ -148,14 +146,14 @@ public class ApplicationController {
                          BindingResult result,
                          @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                         Model model) {
-
+                         Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         if (result.hasErrors()) {
             model.addAttribute("types", ApplicationType.values());
             model.addAttribute("statuses", ApplicationStatus.values());
             model.addAttribute("responseStatuses", ResultStatus.values());
-            model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("institutions", institutionRepository.findAllByUser(user));
             model.addAttribute("title", "Edit Application");
             model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
             return "application/form";

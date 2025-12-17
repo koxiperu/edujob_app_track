@@ -15,85 +15,48 @@
 
         <h2 class="text-center mb-4" th:text="${title}">Document Form</h2>
 
-        <!-- Create Form -->
-        <form th:object="${document}" th:if="${document.id == null}"
-              th:action="@{/documents}" method="post" enctype="multipart/form-data" th:csrf="true">
+        <form th:object="${document}" 
+            th:action="@{${document.id != null} ? '/documents/' + ${document.id} + '/edit' : '/documents'}"
+            method="post" enctype="multipart/form-data" th:csrf="true">
 
             <input type="hidden" th:field="*{id}" />
 
             <!-- File -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">File <span class="text-danger">*</span></label>
-                <input type="file" name="file" class="form-control" required />
+                <label class="form-label" th:text="${document.id == null} ? 'File *' : 'Replace File'"></label>
+                <input type="file" name="file" class="form-control" th:attr="required=${document.id == null}" />
+                <small th:if="${document.id != null}" class="text-muted">Leave empty to keep existing file.</small>
             </div>
 
             <!-- File Name -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">File Name</label>
+                <label class="form-label">File Name *</label>
                 <input type="text" th:field="*{fileName}" class="form-control"
-                       placeholder="Optional, will use uploaded file name if empty">
+                    placeholder="Optional, will use uploaded file name if empty">
             </div>
 
             <!-- Content Type -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Content Type</label>
-                <input type="text" th:field="*{contentType}" class="form-control" placeholder="e.g., pdf, docx, png">
+                <label class="form-label">Content Type *</label>
+                <input type="text" th:field="*{contentType}" class="form-control"
+                    placeholder="Optional, will use uploaded file type if empty">
             </div>
 
             <!-- Status -->
             <div class="border p-3 mb-3 form-section">
                 <label class="form-label">Status</label>
                 <select th:field="*{status}" class="form-select">
-                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-                </select>
-            </div>
-
-            <!-- Submit -->
-            <div class="d-grid">
-                <button type="submit" class="btn submit-button">Upload</button>
-            </div>
-        </form>
-
-        <!-- Edit Form -->
-        <form th:object="${document}" th:if="${document.id != null}"
-              th:action="@{/documents/{id}/edit(id=${document.id})}" method="post" enctype="multipart/form-data" th:csrf="true">
-
-            <input type="hidden" th:field="*{id}" />
-
-            <!-- File -->
-            <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Replace File</label>
-                <input type="file" name="file" class="form-control" />
-                <small class="text-muted">Leave empty to keep existing file.</small>
-            </div>
-
-            <!-- File Name -->
-            <div class="border p-3 mb-3 form-section">
-                <label class="form-label">File Name</label>
-                <input type="text" th:field="*{fileName}" class="form-control"
-                       placeholder="Optional, will use uploaded file name if empty">
-            </div>
-
-            <!-- Content Type -->
-            <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Content Type</label>
-                <input type="text" th:field="*{contentType}" class="form-control" placeholder="e.g., pdf, docx, png">
-            </div>
-
-            <!-- Status -->
-            <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Status</label>
-                <select th:field="*{status}" class="form-select">
-                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" 
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
                         th:selected="${s == document.status}"></option>
                 </select>
             </div>
 
-            <!-- Submit -->
             <div class="d-grid">
-                <button type="submit" class="btn submit-button">Update</button>
+                <button type="submit" class="btn submit-button" 
+                        th:text="${document.id != null} ? 'Update' : 'Upload'"></button>
             </div>
         </form>
+
 
     </div>
 </main>
