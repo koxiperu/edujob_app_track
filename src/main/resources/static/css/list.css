@@ -1,7 +1,9 @@
 /* list.css: custom styling for list pages */
 h1.mb-0 {
-    font-weight: bold;                   /* bold text */
-    color: rgb(93, 3, 149);               /* dark purple */
+    font-weight: bold; 
+    font-size: 3rem;                   /* bold text */
+    color: rgb(93, 3, 149);  
+    text-transform: uppercase;             /* dark purple */
     text-shadow: 2px 2px 4px rgb(138, 237, 212); /* soft cyan shadow */
 }
 /* Background image */
