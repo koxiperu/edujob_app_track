@@ -14,7 +14,7 @@
 <div th:replace="fragments/header :: header"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="container my-5">
+<main class="container my-5" style="width: 90% !important; max-width: 90% !important;">
 
     <!-- Page Title & Add Button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -25,53 +25,46 @@
     </div>
 
     <!-- JOB Applications Table -->
-    <div th:if="${!#lists.isEmpty(jobApplications)}" class="mb-5">
-        <h2 class="mb-3" style="font-weight:bold; color: rgb(93,3,149); text-shadow: 2px 2px 4px rgb(138,237,212);">
-            Job Applications
-        </h2>
+    <div th:if="${!#lists.isEmpty(jobApplications)}">
+        <h2 class="table-title">Job Applications</h2>
         <div class="card shadow-orange p-3">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Title</th>
-                        <th>Institution</th>
-                        <th>Type</th>
-                        <th>Creation Date</th>
-                        <th>Submission Date</th>
-                        <th>Submission Deadline</th>
-                        <th>Response Deadline</th>
-                        <th>Status</th>
-                        <th>Response Status</th>
-                        <th>Documents</th>
-                        <th style="width: 220px;">Actions</th>
+                        <th style="width:20%;">Title</th>
+                        <th style="width:10%;">Institution</th>
+                        <th style="width:5%;">Status</th>
+                        <th style="width:5%;">Response Status</th>
+                        <th style="width:10%;">Creation Date</th>
+                        <th style="width:10%;">Submission Date</th>
+                        <th style="width:10%;">Submission Deadline</th>
+                        <th style="width:10%;">Response Deadline</th>
+                        <th style="width:10%;">Documents</th>
+                        <th style="width:10%;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="app : ${jobApplications}">
                         <td th:text="${app.title != null ? app.title : '-'}"></td>
                         <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
-                        <td th:text="${app.applicationType != null ? app.applicationType : '-'}"></td>
+                        <td th:text="${app.status != null ? app.status : '-'}"></td>
+                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
                         <td th:text="${app.creationDate != null ? app.creationDate : '-'}"></td>
                         <td th:text="${app.submitDate != null ? app.submitDate : '-'}"></td>
                         <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
                         <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
-                        <td th:text="${app.status != null ? app.status : '-'}"></td>
-                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
                         <td>
                             <span th:if="${!#lists.isEmpty(app.documents)}">
                                 <a th:each="doc : ${app.documents}"
                                    th:href="@{/documents/{id}/download(id=${doc.id})}"
-                                   class="btn download-button btn-sm me-1 mb-1"
-                                   style="white-space: nowrap;"
+                                   class="btn download-button btn-doc-stack"
                                    th:text="${doc.fileName}"></a>
                             </span>
                             <span th:if="${#lists.isEmpty(app.documents)}">-</span>
                         </td>
-                        <td>
+                        <td style="width: max-content;">
                             <div class="d-flex gap-2">
-                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">
-                                    Edit
-                                </a>
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
                                 <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
@@ -85,52 +78,45 @@
 
     <!-- EDUCATIONAL Applications Table -->
     <div th:if="${!#lists.isEmpty(eduApplications)}">
-        <h2 class="mb-3" style="font-weight:bold; color: rgb(93,3,149); text-shadow: 2px 2px 4px rgb(138,237,212);">
-            Educational Applications
-        </h2>
+        <h2 class="table-title">Educational Applications</h2>
         <div class="card shadow-orange p-3">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Title</th>
-                        <th>Institution</th>
-                        <th>Type</th>
-                        <th>Creation Date</th>
-                        <th>Submission Date</th>
-                        <th>Submission Deadline</th>
-                        <th>Response Deadline</th>
-                        <th>Status</th>
-                        <th>Response Status</th>
-                        <th>Documents</th>
-                        <th style="width: 220px;">Actions</th>
+                        <th style="width:20%;">Title</th>
+                        <th style="width:10%;">Institution</th>
+                        <th style="width:5%;">Status</th>
+                        <th style="width:5%;">Response Status</th>
+                        <th style="width:10%;">Creation Date</th>
+                        <th style="width:10%;">Submission Date</th>
+                        <th style="width:10%;">Submission Deadline</th>
+                        <th style="width:10%;">Response Deadline</th>
+                        <th style="width:10%;">Documents</th>
+                        <th style="width:10%;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="app : ${eduApplications}">
                         <td th:text="${app.title != null ? app.title : '-'}"></td>
                         <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
-                        <td th:text="${app.applicationType != null ? app.applicationType : '-'}"></td>
+                        <td th:text="${app.status != null ? app.status : '-'}"></td>
+                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
                         <td th:text="${app.creationDate != null ? app.creationDate : '-'}"></td>
                         <td th:text="${app.submitDate != null ? app.submitDate : '-'}"></td>
                         <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
                         <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
-                        <td th:text="${app.status != null ? app.status : '-'}"></td>
-                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
                         <td>
                             <span th:if="${!#lists.isEmpty(app.documents)}">
                                 <a th:each="doc : ${app.documents}"
                                    th:href="@{/documents/{id}/download(id=${doc.id})}"
-                                   class="btn download-button btn-sm me-1 mb-1"
-                                   style="white-space: nowrap;"
+                                   class="btn download-button btn-doc-stack"
                                    th:text="${doc.fileName}"></a>
                             </span>
                             <span th:if="${#lists.isEmpty(app.documents)}">-</span>
                         </td>
-                        <td>
+                        <td style="width: max-content;">
                             <div class="d-flex gap-2">
-                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">
-                                    Edit
-                                </a>
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
                                 <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>

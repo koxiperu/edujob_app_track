@@ -41,3 +41,26 @@ h1.mb-0 {
     background-color: #7c5b81;
     color: white;
 }
+/* Documents buttons in table */
+/* Table titles like Documents page */
+.table-title {
+    font-weight: bold;
+    color: rgb(93, 3, 149);
+    text-shadow: 2px 2px 4px rgb(138, 237, 212);
+    margin-bottom: 0.75rem;
+}
+
+/* Documents buttons in table (stacked, ellipsis) */
+.btn-doc-stack {
+    width: 80px;                /* fixed width */
+    white-space: nowrap;        /* prevent wrapping */
+    overflow: hidden;           /* hide overflow */
+    text-overflow: ellipsis;    /* show "..." if text too long */
+    display: block;             /* stack vertically */
+    margin-bottom: 4px;         /* spacing between buttons */
+    font-size: 0.75rem;         /* smaller font to fit */
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+}
+
+
