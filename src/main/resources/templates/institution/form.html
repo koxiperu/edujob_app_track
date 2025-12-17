@@ -31,14 +31,14 @@
 
             <!-- Name -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Name</label>
+                <label class="form-label">Name *</label>
                 <input th:field="*{name}" class="form-control">
                 <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
             <!-- Type -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Type</label>
+                <label class="form-label">Type *</label>
                 <select th:field="*{type}" class="form-select">
                     <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
                 </select>

@@ -1,6 +1,7 @@
 package cnfpc.project.edujob_app_track.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.DocumentStatus;
+import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.DocumentRepository;
+import cnfpc.project.edujob_app_track.service.UserService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -26,15 +29,18 @@ import jakarta.validation.Valid;
 public class DocumentController {
 
     private final DocumentRepository documentRepository;
+    private final UserService userService;
 
-    public DocumentController(DocumentRepository documentRepository) {
+    public DocumentController(DocumentRepository documentRepository, UserService userService) {
         this.documentRepository = documentRepository;
+        this.userService = userService;
     }
 
     /* LIST ALL DOCUMENTS */
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("documents", documentRepository.findAll());
+    public String list(Model model, Principal principal) {
+        User currentUser = userService.getLoggedInUser();
+        model.addAttribute("documents", documentRepository.findAllByUser(currentUser));
         model.addAttribute("title", "Documents");
         model.addAttribute("containerClass", "user");
         return "document/list";
@@ -58,7 +64,8 @@ public class DocumentController {
                                  BindingResult result,
                                  @RequestParam(value = "returnUrl", required = false) String returnUrl,
                                  @RequestParam(value = "file", required = false) MultipartFile file,
-                                 Model model) throws IOException {
+                                 Model model,
+                                Principal principal) throws IOException {
 
         if (result.hasErrors()) {
             model.addAttribute("statuses", DocumentStatus.values());
@@ -72,6 +79,8 @@ public class DocumentController {
             document.setData(file.getBytes());
         }
 
+        User currentUser = userService.getLoggedInUser();
+        document.setUser(currentUser);
         documentRepository.save(document);
         return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
     }
@@ -80,8 +89,11 @@ public class DocumentController {
     @GetMapping("/{id}/edit")
     public String editDocument(@PathVariable Long id,
                                @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                               Model model) {
-        Document doc = documentRepository.findById(id).orElseThrow();
+                               Model model,Principal principal) {
+        User currentUser = userService.getLoggedInUser();
+        Document doc = documentRepository.findById(id)
+            .filter(d -> d.getUser().equals(currentUser))
+            .orElseThrow(() -> new SecurityException("You cannot access this document"));
         model.addAttribute("document", doc);
         model.addAttribute("statuses", DocumentStatus.values());
         model.addAttribute("returnUrl", returnUrl);
@@ -97,7 +109,8 @@ public class DocumentController {
                                  BindingResult result,
                                  @RequestParam(value = "returnUrl", required = false) String returnUrl,
                                  @RequestParam(value = "file", required = false) MultipartFile file,
-                                 Model model) throws IOException {
+                                 Model model,
+                                Principal principal) throws IOException {
 
         if (result.hasErrors()) {
             model.addAttribute("statuses", DocumentStatus.values());
@@ -105,8 +118,8 @@ public class DocumentController {
             return "document/form";
         }
 
-        Document doc = documentRepository.findById(id).orElseThrow();
-
+        User currentUser = userService.getLoggedInUser();
+        Document doc = documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
         // Update file if provided
         if (file != null && !file.isEmpty()) {
             doc.setFileName(file.getOriginalFilename());
@@ -124,15 +137,23 @@ public class DocumentController {
     /* DELETE DOCUMENT */
     @PostMapping("/{id}/delete")
     public String deleteDocument(@PathVariable Long id,
-                                 @RequestParam(value = "returnUrl", required = false) String returnUrl) {
+                                 @RequestParam(value = "returnUrl", required = false) String returnUrl,
+                                Principal principal) {
+
+        User currentUser = userService.getLoggedInUser();
+        documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
         documentRepository.deleteById(id);
         return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
     }
 
     /* DOWNLOAD DOCUMENT */
     @GetMapping("/{id}/download")
-    public ResponseEntity<byte[]> download(@PathVariable Long id) {
-        Document doc = documentRepository.findById(id).orElseThrow();
+    public ResponseEntity<byte[]> download(@PathVariable Long id, Principal principal) {
+        User currentUser = userService.getLoggedInUser();
+        Document doc = documentRepository.findById(id)
+            .filter(d -> d.getUser().equals(currentUser))
+            .orElseThrow(() -> new SecurityException("You cannot download this document"));
+
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + doc.getFileName() + "\"")
