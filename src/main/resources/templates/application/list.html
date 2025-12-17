@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} ?: 'Application Tracker'">Applications</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom list styling -->
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body class="bg-image bg-body">
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container my-5 wid">
+
+    <!-- Page Title & Add Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0" th:text="${title}">Applications</h1>
+        <a th:href="@{/applications/new}" class="btn submit-button text-white">
+            Add Application
+        </a>
+    </div>
+
+    <!-- JOB Applications Table -->
+    <div th:if="${!#lists.isEmpty(jobApplications)}">
+        <h2 class="table-title">Job Applications</h2>
+        <div class="card shadow-orange p-3">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:20%;">Title</th>
+                        <th style="width:10%;">Institution</th>
+                        <th style="width:5%;">Status</th>
+                        <th style="width:5%;">Response Status</th>
+                        <th style="width:10%;">Creation Date</th>
+                        <th style="width:10%;">Submission Date</th>
+                        <th style="width:10%;">Submission Deadline</th>
+                        <th style="width:10%;">Response Deadline</th>
+                        <th style="width:10%;">Documents</th>
+                        <th style="width:10%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app : ${jobApplications}">
+                        <td th:text="${app.title != null ? app.title : '-'}"></td>
+                        <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
+                        <td th:text="${app.status != null ? app.status : '-'}"></td>
+                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
+                        <td th:text="${app.creationDate != null ? app.creationDate : '-'}"></td>
+                        <td th:text="${app.submitDate != null ? app.submitDate : '-'}"></td>
+                        <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
+                        <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
+                        <td>
+                            <span th:if="${!#lists.isEmpty(app.documents)}">
+                                <a th:each="doc : ${app.documents}"
+                                   th:href="@{/documents/{id}/download(id=${doc.id})}"
+                                   class="btn download-button btn-doc-stack"
+                                   th:text="${doc.fileName}"></a>
+                            </span>
+                            <span th:if="${#lists.isEmpty(app.documents)}">-</span>
+                        </td>
+                        <td style="width: max-content;">
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
+                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- EDUCATIONAL Applications Table -->
+    <div th:if="${!#lists.isEmpty(eduApplications)}">
+        <h2 class="table-title">Educational Applications</h2>
+        <div class="card shadow-orange p-3">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:20%;">Title</th>
+                        <th style="width:10%;">Institution</th>
+                        <th style="width:5%;">Status</th>
+                        <th style="width:5%;">Response Status</th>
+                        <th style="width:10%;">Creation Date</th>
+                        <th style="width:10%;">Submission Date</th>
+                        <th style="width:10%;">Submission Deadline</th>
+                        <th style="width:10%;">Response Deadline</th>
+                        <th style="width:10%;">Documents</th>
+                        <th style="width:10%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app : ${eduApplications}">
+                        <td th:text="${app.title != null ? app.title : '-'}"></td>
+                        <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
+                        <td th:text="${app.status != null ? app.status : '-'}"></td>
+                        <td th:text="${app.responseStatus != null ? app.responseStatus : '-'}"></td>
+                        <td th:text="${app.creationDate != null ? app.creationDate : '-'}"></td>
+                        <td th:text="${app.submitDate != null ? app.submitDate : '-'}"></td>
+                        <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
+                        <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
+                        <td>
+                            <span th:if="${!#lists.isEmpty(app.documents)}">
+                                <a th:each="doc : ${app.documents}"
+                                   th:href="@{/documents/{id}/download(id=${doc.id})}"
+                                   class="btn download-button btn-doc-stack"
+                                   th:text="${doc.fileName}"></a>
+                            </span>
+                            <span th:if="${#lists.isEmpty(app.documents)}">-</span>
+                        </td>
+                        <td style="width: max-content;">
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
+                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport height */
+    margin: 0;
+}
+
+main {
+    flex: 1; /* takes remaining space */
+}
+
+h1.mb-0 {
+    font-weight: bold; 
+    font-size: 3rem;                   /* bold text */
+    color: rgb(93, 3, 149);  
+    text-transform: uppercase;             /* dark purple */
+    text-shadow: 2px 2px 4px rgb(138, 237, 212); /* soft cyan shadow */
+}
+
+/* Background image for profile page */
+.bg-profile {
+    background: url("/images/profile-bg.jpg") no-repeat fixed;
+    background-size: cover;
+}
+
+/* Card styling */
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+}
+
+/* Header in card */
+h1.text-center {
+    font-weight: bold;
+    color: rgb(93, 3, 149);
+    text-shadow: 2px 2px 4px rgb(138, 237, 212);
+}
+
+/* Buttons consistent with other pages */
+.btn.submit-button {
+    background-color: rgb(93, 3, 149);
+    font-weight: 800;
+}
+.btn.submit-button:hover {
+    background-color: rgb(43, 0, 67);
+    color: #fff;
+}
+
+/* Card shadow to match other pages */
+.shadow-orange {
+    box-shadow: 0 0 2rem rgb(138, 237, 212);
+}
+
+/* Formatted profile info */
+.profile-info p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}

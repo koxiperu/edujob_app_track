@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} ?: 'Application Tracker'">Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom list styling -->
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body class="bg-image bg-body">
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container my-5 wid">
+
+    <!-- Page Title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Dashboard</h1>
+        <h2 class="text-success mb-0">Welcome, <strong th:text="${username}">User</strong>!</h2>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="card shadow-orange p-3 mb-4">
+        <form method="get" th:action="@{/dashboard}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="status" class="form-label">Filter by Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">All</option>
+                    <option th:each="st : ${statuses}"
+                            th:value="${st}"
+                            th:text="${st}"
+                            th:selected="${st == selectedStatus}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="type" class="form-label">Filter by Type</label>
+                <select id="type" name="type" class="form-select">
+                    <option value="">All</option>
+                    <option th:each="t : ${types}"
+                            th:value="${t}"
+                            th:text="${t}"
+                            th:selected="${t == selectedType}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn submit-button text-white">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Applications Table -->
+    <div th:if="${!#lists.isEmpty(applications)}">
+        <div class="card shadow-orange p-3">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:25%;">Title</th>
+                        <th style="width:15%;">Type</th>
+                        <th style="width:20%;">Institution</th>
+                        <th style="width:10%;">Status</th>
+                        <th style="width:15%;">Submission Deadline</th>
+                        <th style="width:15%;">Response Deadline</th>
+                        <th style="width:10%;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td th:text="${app.title != null ? app.title : '-'}"></td>
+                        <td th:text="${app.applicationType != null ? app.applicationType : '-'}"></td>
+                        <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
+                        <td th:text="${app.status != null ? app.status : '-'}"></td>
+                        <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
+                        <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
+                        <td>
+                            <a th:href="@{/applications/{id}/details(id=${app.id})}" 
+                            class="btn submit-button text-white btn-sm">
+                            View
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p th:if="${#lists.isEmpty(applications)}" class="mt-3">
+        No applications found.
+    </p>
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
