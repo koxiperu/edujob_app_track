@@ -62,5 +62,9 @@ h1.mb-0 {
     padding: 0.25rem 0.5rem;
     text-align: center;
 }
+.container.my-5.wid {
+    width: 80% !important; 
+    max-width: 80% !important;
+}
 
 
