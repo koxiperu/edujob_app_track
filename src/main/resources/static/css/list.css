@@ -1,3 +1,13 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport height */
+    margin: 0;
+}
+
+main {
+    flex: 1; /* takes remaining space */
+}
 /* list.css: custom styling for list pages */
 h1.mb-0 {
     font-weight: bold; 

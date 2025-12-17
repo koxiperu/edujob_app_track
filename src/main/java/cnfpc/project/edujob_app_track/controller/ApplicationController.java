@@ -3,6 +3,7 @@ package cnfpc.project.edujob_app_track.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
@@ -192,5 +193,19 @@ public class ApplicationController {
     public String delete(@PathVariable Long id) {
         applicationRepository.deleteById(id);
         return "redirect:/applications";
+    }
+
+    @GetMapping("/{id}/details")
+    public String viewApplicationDetails(@PathVariable Long id, Model model) {
+        Optional<Application> appOpt = applicationRepository.findByIdWithDocuments(id);
+        if (appOpt.isEmpty()) {
+            // Optionally handle not found
+            return "redirect:/applications"; 
+        }
+
+        Application app = appOpt.get();
+        model.addAttribute("title", "Application Details");
+        model.addAttribute("application", app);
+        return "application/details";
     }
 }
