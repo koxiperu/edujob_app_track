@@ -127,6 +127,11 @@
             </table>
         </div>
     </div>
+<div th:if="${#lists.isEmpty(jobApplications) and #lists.isEmpty(eduApplications)}"
+     class="alert alert-warning shadow-orange">
+    <strong>No applications found. You can create new applications using the button above.</strong>
+    
+</div>
 
 </main>
 

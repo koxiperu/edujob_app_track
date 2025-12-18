@@ -47,7 +47,8 @@ public class InstitutionController {
                         type -> type,
                         type -> institutionRepository.findByTypeAndUser(type, currentUser)
                 ));
-
+        boolean noInstitutions = grouped.values().stream().allMatch(List::isEmpty);
+        model.addAttribute("noInstitutions", noInstitutions);
         model.addAttribute("groupedInstitutions", grouped);
         model.addAttribute("title", "Institutions");
         model.addAttribute("containerClass", "user");
