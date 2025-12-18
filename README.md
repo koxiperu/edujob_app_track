@@ -11,15 +11,17 @@ The project is designed to demonstrate full-stack Spring Boot skills, including 
 - Notifications for upcoming deadlines/interviews.
 
 ### Features
-List main features (high-priority first):
+List main features:
 - User registration and login (Spring Security)
 - Role-based access (ADMIN, USER)
-- Supervisor management (users can add supervisors)
 - Application CRUD
 - Document upload (PDFs stored in Oracle BLOBs)
-- Many-to-many relationships (Application ↔ Documents, User ↔ Supervisors)
+- Many-to-many relationships (Applications ↔ Documents)
 - Institution management (universities, employers, lycées, courses)
-- Dashboard showing applications, documents, and notifications
+- Dashboard showing applications and notifications about deadlines
+Future features (to do):
+- Supervisor management (self-referencing user relationships)
+- Dashboard (or even email) notifications
 
 ### Technical stack
 - Backend: Spring Boot 3.x
@@ -118,11 +120,53 @@ Relationships:
 
 
 
-## Step 1: Install Docker (if you don’t have it)
+## 2.1. Run locally (Java & Maven required)
+Prerequisites:
+- Java 21
+- Maven
+- Docker (Oracle DB)
+### Install Java 21
+#### Windows:
+- Download JDK 21 (LTS) from:
+https://adoptium.net/
+- Choose:
+Version: 21
+Package: JDK
+OS: Windows
+- Install and check “Set JAVA_HOME”
+- Verify:
+```java -version```
 
-Because Oracle XE is too heavy to install manually — Docker is required.
+#### macOS (Homebrew):
+```brew install openjdk@21
+echo 'export JAVA_H$(/usr/libexec/java_home -v21)' >> ~/.zshrc
+source ~/.zshrc
+java -version
 
-## Step 2: Download the repository OR just download docker-compose.yml
+Linux (Ubunja)a -version```up#### Linux (Ubuntu)install -y openjdk-21-jdk
+java -version
+
+### Install Maven
+### Install Docker
+ Because Oracle XE is too heavy to install manually — Docker is required. 
+ Windows / macOS: 
+- Download Docker Desktop
+https://www.docker.com/products/docker-desktop
+- Install and restart your computer if prompted
+- Start Docker Desktop
+- Verify installation:
+```docker --version```
+Linux (Ubuntu):
+```
+sudo apt update
+sudo apt install -y docker.io docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version
+```
+
+
+ry OR just download docker-compose.yml
 
 The repo contains a docker-compose.yml like:
 
