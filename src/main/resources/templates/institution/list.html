@@ -18,18 +18,18 @@
 
     <!-- Page Title & Add Button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0" th:text="${title}">Institutions</h1>
+        <h1 class="mb-0" th:text="${title}">Companies</h1>
         <a th:href="@{/institutions/new}" class="btn submit-button text-white">
-            Add Institution
+            Add Company
         </a>
     </div>
     <div th:if="${noInstitutions}" class="alert alert-warning shadow-orange">
-        <strong>No institutions found.</strong>
-        You can create a new institution using the button above.
+        <strong>No companies found.</strong>
+        You can create a new company using the button above.
     </div>
     <!-- Loop through institution groups -->
     <div th:each="entry : ${groupedInstitutions}" th:if="${!#lists.isEmpty(entry.value)}" class="mb-5">
-        <h2 class="table-title" th:text="${entry.key}">Institution Type</h2>
+        <h2 class="table-title" th:text="${entry.key}">Company Type</h2>
         <div class="card shadow-orange p-3">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">

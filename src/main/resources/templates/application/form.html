@@ -57,15 +57,15 @@
 
             <!-- SECTION: Institution -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Institution *</label>
+                <label class="form-label">Company *</label>
                 <div class="d-flex gap-2">
                     <select th:field="*{institution}" class="form-select" required>
-                        <option value="">-- Select institution --</option>
+                        <option value="">-- Select Company --</option>
                         <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}"></option>
                     </select>
                     <a th:href="@{/institutions/new(returnUrl=${returnUrl})}"
                        class="btn submit-button text-white">
-                        + Create new institution
+                        + Create new company
                     </a>
                 </div>
             </div>

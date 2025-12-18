@@ -20,7 +20,7 @@
     <!-- Page Title -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Dashboard</h1>
-        <h2 class="text-success mb-0">Welcome, <strong th:text="${username}">User</strong>!</h2>
+        <h2 class="text-success mb-0">Welcome, <strong th:text="${username}">User</strong>! <span sec:authorize="hasRole('ADMIN')"> You are admin</span></h2>
     </div>
 
     <!-- Filter Form -->
@@ -62,7 +62,7 @@
                     <tr>
                         <th style="width:25%;">Title</th>
                         <th style="width:15%;">Type</th>
-                        <th style="width:20%;">Institution</th>
+                        <th style="width:20%;">Company</th>
                         <th style="width:10%;">Status</th>
                         <th style="width:15%;">Submission Deadline</th>
                         <th style="width:15%;">Response Deadline</th>

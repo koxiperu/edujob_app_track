@@ -121,9 +121,11 @@
         <div class="nav-links" id="navLinks">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/applications}">Applications</a>
-            <a th:href="@{/institutions}">Institutions</a>
+            <a th:href="@{/institutions}">Companies</a>
             <a th:href="@{/documents}">Documents</a>
             <a th:href="@{/user/profile}">Profile</a>
+            <a th:href="@{/user/manage}" sec:authorize="hasRole('ADMIN')">Manage Users</a>
+            
         </div>
     </div>
 
