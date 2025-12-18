@@ -1,0 +1,108 @@
+/* =========================
+   HEADER / NAVBAR (GLOBAL)
+   ========================= */
+
+/* Main header container */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 32px;
+    background-color: #f2f2f2; /* slightly grey background */
+    border-bottom: 1px solid #ddd;
+
+    position: relative;
+    z-index: 1000;
+}
+
+/* LEFT SIDE */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Logo */
+.app-logo {
+    height: 56px;
+    width: auto;
+    border-radius: 8px;
+}
+
+/* Title + slogan container */
+.title-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main title */
+.app-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: rgb(93, 3, 149); /* dark purple */
+    line-height: 1.2;
+}
+
+/* Slogan */
+.app-slogan {
+    font-size: 0.9rem;
+    color: rgb(62, 110, 98); /* calm green */
+    margin-top: 2px;
+}
+
+/* RIGHT SIDE */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Username badge */
+.user-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+    background-color: rgb(255, 230, 120); /* soft yellow */
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+
+    box-shadow: 0 0 12px rgb(138, 237, 212);
+    transition: transform 0.2s ease;
+}
+
+.user-badge:hover {
+    transform: scale(1.05);
+    text-decoration: none;
+    color: #000;
+}
+
+/* Logout badge */
+.logout-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+    border-radius: 999px;
+
+    background-color: rgb(235, 115, 50); /* orange */
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+
+    box-shadow: 0 0 12px rgb(235, 208, 240);
+    transition: transform 0.2s ease;
+}
+
+.logout-badge:hover {
+    transform: scale(1.05);
+    color: #fff;
+    text-decoration: none;
+}

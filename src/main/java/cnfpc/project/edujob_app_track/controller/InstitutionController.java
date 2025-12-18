@@ -1,10 +1,12 @@
 package cnfpc.project.edujob_app_track.controller;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,24 +19,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import cnfpc.project.edujob_app_track.model.Enums.InstitutionType;
 import cnfpc.project.edujob_app_track.model.Institution;
+import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.InstitutionRepository;
+import cnfpc.project.edujob_app_track.service.UserService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/institutions")
 public class InstitutionController {
     private final InstitutionRepository institutionRepository;
+    private final UserService userService;;
 
-    public InstitutionController(InstitutionRepository institutionRepository) {
+    public InstitutionController(InstitutionRepository institutionRepository, UserService userService) {
         this.institutionRepository = institutionRepository;
+        this.userService = userService;
     }
 
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model, Principal principal) {
+        User currentUser = userService.getLoggedInUser();
         Map<InstitutionType, List<Institution>> grouped = Arrays.stream(InstitutionType.values())
                 .collect(Collectors.toMap(
                         type -> type,
-                        type -> institutionRepository.findByType(type)
+                        type -> institutionRepository.findByTypeAndUser(type, currentUser)
                 ));
 
         model.addAttribute("groupedInstitutions", grouped);
@@ -69,19 +76,21 @@ public class InstitutionController {
             return "institution/form";
         }
 
+        User currentUser = userService.getLoggedInUser();
+        institution.setUser(currentUser);
+
         institutionRepository.save(institution);
 
-        if (returnUrl != null && !returnUrl.isBlank()) {
-            return "redirect:" + returnUrl;
-        }
+        return returnUrl != null && !returnUrl.isBlank() ? "redirect:" + returnUrl : "redirect:/institutions";
 
-        return "redirect:/institutions";
     }
     /* EDIT FORM */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Institution institution = institutionRepository.findById(id).orElseThrow();
-
+        if (!institution.getUser().equals(userService.getLoggedInUser())) {
+            throw new AccessDeniedException("You cannot edit this institution");
+        }
         model.addAttribute("institution", institution);
         model.addAttribute("types", InstitutionType.values());
         model.addAttribute("title", "Edit Institution");
@@ -97,7 +106,10 @@ public class InstitutionController {
             model.addAttribute("title", "Edit Institution");
             return "institution/form";
         }
-
+        
+        if (!institution.getUser().equals(userService.getLoggedInUser())) {
+            throw new AccessDeniedException("You cannot edit this institution");
+        }
         institution.setId(id);
         institutionRepository.save(institution);
         return "redirect:/institutions";
@@ -106,6 +118,10 @@ public class InstitutionController {
     /* DELETE */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
+        Institution institution = institutionRepository.findById(id).orElseThrow();
+        if (!institution.getUser().equals(userService.getLoggedInUser())) {
+            throw new AccessDeniedException("You cannot edit this institution");
+        }
         institutionRepository.deleteById(id);
         return "redirect:/institutions";
     }

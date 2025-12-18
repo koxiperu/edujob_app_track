@@ -6,9 +6,12 @@ import cnfpc.project.edujob_app_track.model.Enums.InstitutionType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -36,6 +39,10 @@ public class Institution {
 
     @Email
     private String email;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // One-to-Many: Institution → Applications
     @OneToMany(mappedBy = "institution")
@@ -111,6 +118,14 @@ public class Institution {
 
     public void setApplications(Set<Application> applications) {
         this.applications = applications;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     

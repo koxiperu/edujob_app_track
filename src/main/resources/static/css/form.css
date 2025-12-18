@@ -44,3 +44,12 @@ h2 {
 .form-section {
     background-color: #ffffff !important;
 }
+.btn.additional {
+    background-color: #ae81b5; /* dust-rose */
+    color: white;
+    font-weight: bold;
+}
+.btn.additional :hover {
+        background-color: #7c5b81;
+        color: white;
+}
