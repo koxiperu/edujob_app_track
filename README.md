@@ -1,8 +1,8 @@
-# EduJob Application Tracker
+# EduJob Application Tracker info
 This project is a Spring Boot + Thymeleaf MVC web application that allows users to track applications for jobs, universities, lycees or courses. Users can manage multiple applications, track required documents, deadlines, interviews, and application status. Users can also add supervisors (e.g., parents or career advisors) to oversee their application progress.
 The project is designed to demonstrate full-stack Spring Boot skills, including MVC architecture, JPA relationships, form validation, authentication, file upload, and deployment using Docker with an Oracle database.
 
-# Project description
+### Project description
 - Track applications for jobs, universities, lycées, and courses.
 - Users can be students or job seekers.
 - Supervisors (like parents or career consultants) can monitor applications.
@@ -10,7 +10,7 @@ The project is designed to demonstrate full-stack Spring Boot skills, including 
 - Upload and store documents (PDFs) in Oracle BLOBs.
 - Notifications for upcoming deadlines/interviews.
 
-# Features
+### Features
 List main features (high-priority first):
 - User registration and login (Spring Security)
 - Role-based access (ADMIN, USER)
@@ -21,7 +21,7 @@ List main features (high-priority first):
 - Institution management (universities, employers, lycées, courses)
 - Dashboard showing applications, documents, and notifications
 
-# Technical stack
+### Technical stack
 - Backend: Spring Boot 3.x
 - Frontend: Thymeleaf, HTML, CSS, JavaScript
 - Database: Oracle (Docker container)
@@ -31,16 +31,71 @@ List main features (high-priority first):
 - Build: Maven, executable JAR
 - Development tools: DBeaver, Docker
 
-# DB Schema
+### DB Schema
+![ERD diagram](images/ERD.png)
 Describe entities and relationships briefly (or refer to ERD):
-- Users: can be students, job seekers, supervisors
+- Users: 
+-- id: Long, primary key, auto-generated
+-- username: String, unique, not null (used for login)
+-- password: String, not null (hashed via Spring Security)
+-- email: String, not null, validated as email
+-- firstName, lastName: String, not null
+-- birthDate: LocalDate, optional
+-- phone: String, optional
+-- role_id: foreign key → roles.id (Many-to-One)
+Relationships:
+--Supervisors / Supervised Users: Self-referencing Many-to-Many through user_supervisor join table
+--Applications: One-to-Many (User → Application)
 - Roles: ADMIN, USER
+-- id: Long, primary key, auto-generated
+-- name: String, unique, not null (e.g., ADMIN, USER)
+Relationships:
+-- Users: One-to-Many (Role → User) — each user is assigned exactly one role.
 - Applications: track submissions and deadlines
+-- id: Long, primary key, auto-generated
+-- title: String, not null — application title
+-- description: String (up to 5000 chars) — optional description
+-- user_id: Long, foreign key → users.id — owner of the application
+-- institution_id: Long, foreign key → institutions.id — related institution
+-- applicationType: ENUM (JOB / UNIVERSITY / LYCEE / COURSE)
+-- creationDate: LocalDate — automatically set on creation
+-- submitDate, submitDeadline, responseDeadline: LocalDate — track submission and response deadlines
+-- status: ENUM (PLANNED, SUBMITTED, ACCEPTED, REJECTED, etc.)
+-- responseStatus: ENUM (tracks response/result)
+-- resultNotes: String (up to 2000 chars) — optional notes
+Relationships:
+-- Many-to-One: User → Application (each application belongs to a single user)
+-- Many-to-One: Institution → Application (application linked to an institution)
+-- Many-to-Many: Application ↔ Document via app_doc join table (each application can have multiple documents, and each document can be linked to multiple applications)
 - Documents: uploaded PDFs, reusable across applications
+-- id: Long, primary key, auto-generated
+-- fileName: String, not null — name of the file
+-- contentType: String, not null — file MIME type (pdf, image, etc.)
+-- uploadDate: LocalDate — date when file was uploaded
+-- data: BLOB — file content stored in Oracle BLOB
+-- status: ENUM (READY, NOT_READY, IN_PROGRESS)
+Relationships:
+-- Many-to-One: User → Document (uploader/owner of the document)
+-- Many-to-Many: Document ↔ Application via app_doc join table (documents can be attached to multiple applications)
 - Institutions: universities, employers, lycées, courses
-- Join tables: user_supervisor, app_doc
+-- id: Long, primary key, auto-generated
+-- name: String, not null — institution name
+-- type: ENUM (InstitutionType), not null — JOB / UNIVERSITY / LYCEE / COURSE
+-- country: String — country of institution
+-- address: String — full address
+-- website: String — URL of institution
+-- phone: String — contact phone number
+-- email: String — contact email, validated with @Email
+-- user_id: Long — owner/creator of the institution (optional)
+Relationships:
+-- One-to-Many: Institution → Application (an institution can have multiple applications linked)
+-- Many-to-One: User → Institution (user who added/created the institution)
+- Join tables: app_doc
+-- application_id: Long, foreign key → applications.id
+-- document_id: Long, foreign key → documents.id
 
-# Prerequisites
+
+### Prerequisites
 - Java 21
 - Maven
 - Docker (Oracle container running)
@@ -48,7 +103,7 @@ Describe entities and relationships briefly (or refer to ERD):
 
 # Project setup and run instructions
 1. Clone the repository:
-   git clone <repo-url>
+`git clone <repo-url>`
 2. Switch to your feature branch:
    git checkout <branch-name>
 3. Configure application.properties:
