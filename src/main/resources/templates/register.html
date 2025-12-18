@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body class="bg-image bg-body">
+
+<main class="container d-flex justify-content-center align-items-center vh-100">
+    <form th:action="@{/register}" th:object="${user}" method="post"
+          class="card p-4 shadow-orange form-shell" style="width: 100%; max-width: 400px;">
+
+        <h2 class="text-center mb-4">Register</h2>
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username*</label>
+            <input type="text" th:field="*{username}" class="form-control"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password*</label>
+            <input type="password" th:field="*{password}" class="form-control"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email*</label>
+            <input type="email" th:field="*{email}" class="form-control"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name*</label>
+            <input type="text" th:field="*{firstName}" class="form-control"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name*</label>
+            <input type="text" th:field="*{lastName}" class="form-control"/>
+            <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
+        </div>
+
+        <div class="mb-3">
+            <label for="birthDate" class="form-label">Birth Date</label>
+            <input type="date" th:field="*{birthDate}" class="form-control"/>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" th:field="*{phone}" class="form-control"/>
+        </div>
+
+        <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-primary submit-button text-white">Register</button>
+        </div>
+
+        <div class="text-center">
+            <span>Already have an account? </span>
+            <a th:href="@{/login}" class="btn additional">Login</a>
+        </div>
+
+    </form>
+</main>
+
+</body>
+</html>

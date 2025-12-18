@@ -166,5 +166,4 @@ public class User {
         this.applications = applications;
     }
 
-    // Getters and setters ...
 }

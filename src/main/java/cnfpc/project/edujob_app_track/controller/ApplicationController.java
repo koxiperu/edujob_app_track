@@ -3,8 +3,6 @@ package cnfpc.project.edujob_app_track.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,6 +19,7 @@ import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationType;
 import cnfpc.project.edujob_app_track.model.Enums.ResultStatus;
+import cnfpc.project.edujob_app_track.model.Institution;
 import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.ApplicationRepository;
 import cnfpc.project.edujob_app_track.repository.DocumentRepository;
@@ -72,13 +71,14 @@ public class ApplicationController {
     /* CREATE FORM */
     @GetMapping("/new")
     public String createForm(@RequestParam(value = "returnUrl", required = false) String returnUrl,
-                             Model model) {
+                             Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         model.addAttribute("application", new Application());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
-        model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("institutions", institutionRepository.findAllByUser(user));
         model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
         model.addAttribute("title", "Add Application");
         model.addAttribute("containerClass", "forms");
@@ -93,19 +93,17 @@ public class ApplicationController {
                          @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
                          Model model) {
-
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         if (result.hasErrors()) {
             model.addAttribute("types", ApplicationType.values());
             model.addAttribute("statuses", ApplicationStatus.values());
             model.addAttribute("responseStatuses", ResultStatus.values());
-            model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("institutions", institutionRepository.findAllByUser(user));
             model.addAttribute("title", "Add Application");
             model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/new");
             return "application/form";
         }
-
-        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
         application.setUser(user);
 
         if (documentIds != null) {
@@ -124,17 +122,16 @@ public class ApplicationController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id,
                            @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                           Model model) {
+                           Model model, Principal principal) {
         Application application = applicationRepository.findByIdWithDocuments(id).orElseThrow();
-        System.out.println("Documents count: " + application.getDocuments().size());
-
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         model.addAttribute("application", application);
         model.addAttribute("app_docs", application.getDocuments());
         model.addAttribute("types", ApplicationType.values());
         model.addAttribute("statuses", ApplicationStatus.values());
         model.addAttribute("responseStatuses", ResultStatus.values());
-        model.addAttribute("institutions", institutionRepository.findAll());
-        model.addAttribute("documents", documentRepository.findAll());
+        model.addAttribute("institutions", institutionRepository.findAllByUser(user));
         model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
         model.addAttribute("title", "Edit Application");
         model.addAttribute("containerClass", "forms");
@@ -148,14 +145,14 @@ public class ApplicationController {
                          BindingResult result,
                          @RequestParam(value = "documentIds", required = false) List<Long> documentIds,
                          @RequestParam(value = "returnUrl", required = false) String returnUrl,
-                         Model model) {
-
+                         Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        model.addAttribute("documents", documentRepository.findAllByUser(user));
         if (result.hasErrors()) {
             model.addAttribute("types", ApplicationType.values());
             model.addAttribute("statuses", ApplicationStatus.values());
             model.addAttribute("responseStatuses", ResultStatus.values());
-            model.addAttribute("institutions", institutionRepository.findAll());
-            model.addAttribute("documents", documentRepository.findAll());
+            model.addAttribute("institutions", institutionRepository.findAllByUser(user));
             model.addAttribute("title", "Edit Application");
             model.addAttribute("returnUrl", returnUrl != null ? returnUrl : "/applications/" + id + "/edit");
             return "application/form";
@@ -207,4 +204,81 @@ public class ApplicationController {
         model.addAttribute("app", application);
         return "application/details";
     }
+
+    @GetMapping("/documents/{id}/used")
+    public String documentUsedPage(@PathVariable Long id, Model model, Principal principal) {
+
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Document document = documentRepository.findById(id)
+                .filter(d -> d.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        List<Application> applications =
+                applicationRepository.findAllByDocumentId(id);
+
+        model.addAttribute("document", document);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Document is in use");
+
+        return "application/doc_used";
+    }
+
+    @GetMapping("/institutions/{id}/used")
+    public String institutionUsedPage(@PathVariable Long id, Model model, Principal principal) {
+
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Institution institution = institutionRepository.findById(id)
+                .filter(d -> d.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        List<Application> applications =
+                applicationRepository.findAllByInstitutionId(id);
+
+        model.addAttribute("institution", institution);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Institution is in use");
+
+        return "application/inst_used";
+    }
+
+    @PostMapping("/documents/{docId}/applications/{appId}/delete")
+    public String deleteApplicationFromDocument(
+            @PathVariable Long docId,
+            @PathVariable Long appId,
+            Principal principal
+    ) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Application application = applicationRepository.findById(appId)
+                .filter(a -> a.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        applicationRepository.delete(application);
+
+        return "redirect:/applications/documents/" + docId + "/used";
+        
+    }
+
+    @PostMapping("/institutions/{instId}/applications/{appId}/delete")
+    public String deleteApplicationFromInstitution(
+            @PathVariable Long instId,
+            @PathVariable Long appId,
+            Principal principal
+    ) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Application application = applicationRepository.findById(appId)
+                .filter(a -> a.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        applicationRepository.delete(application);
+
+        // Redirect to the correct “institution-used” page
+        return "redirect:/applications/institutions/" + instId + "/used";
+    }
+
+
+
 }

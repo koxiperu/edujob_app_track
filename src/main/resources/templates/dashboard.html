@@ -70,7 +70,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="app : ${applications}">
+                    <tr th:each="app : ${applications}"
+                        th:classappend="${highlightMap[app.id]} ? 'table-danger'">
                         <td th:text="${app.title != null ? app.title : '-'}"></td>
                         <td th:text="${app.applicationType != null ? app.applicationType : '-'}"></td>
                         <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
@@ -84,7 +85,10 @@
                             </a>
                         </td>
                     </tr>
+
                 </tbody>
+
+
             </table>
         </div>
     </div>

@@ -14,6 +14,9 @@
         <h2 class="text-center mb-4">Login</h2>
 
         <form th:action="@{/login}" method="post">
+            <div class="mt-3 text-success" th:if="${param.registered}">
+                Registration successful! Please login.
+            </div>
             <div class="border p-3 mb-3 form-section">
                 <label for="username" class="form-label">Username:</label>
                 <input type="text" id="username" name="username" class="form-control" required>
@@ -34,6 +37,10 @@
         </div>
         <div class="mt-3 text-success" th:if="${param.logout}">
             You have been logged out.
+        </div>
+        <div class="mt-3 text-center">
+            <span>Don't have an account yet? </span>
+            <a th:href="@{/register}" class="btn additional">Create an account</a>
         </div>
     </div>
 </main>

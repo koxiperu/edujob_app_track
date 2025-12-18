@@ -23,7 +23,10 @@
             Add Institution
         </a>
     </div>
-
+    <div th:if="${noInstitutions}" class="alert alert-warning shadow-orange">
+        <strong>No institutions found.</strong>
+        You can create a new institution using the button above.
+    </div>
     <!-- Loop through institution groups -->
     <div th:each="entry : ${groupedInstitutions}" th:if="${!#lists.isEmpty(entry.value)}" class="mb-5">
         <h2 class="table-title" th:text="${entry.key}">Institution Type</h2>
@@ -59,7 +62,6 @@
             </table>
         </div>
     </div>
-
 </main>
 
 <div th:replace="fragments/footer :: footer"></div>
