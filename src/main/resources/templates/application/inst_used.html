@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Institution is in use</title>
+    <title>Company is in use</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,26 +19,26 @@
 
     <!-- Page title -->
     <div class="mb-4">
-        <h1 class="mb-0">Institution is in use</h1>
+        <h1 class="mb-0">Company is in use</h1>
     </div>
 
     <!-- Info message -->
     <div class="alert alert-warning shadow-orange">
-        <strong>Cannot delete institution:</strong>
-        This institution is currently used in one or more applications.
+        <strong>Cannot delete Company:</strong>
+        This company is currently used in one or more applications.
         You must delete those applications first.
     </div>
 
     <!-- Institution info card -->
     <div class="card shadow-orange p-3 mb-4">
-        <h2 class="table-title">Institution</h2>
+        <h2 class="table-title">Company</h2>
 
         <!-- hidden institution id -->
         <input type="hidden" name="institutionId" th:value="${institution.id}" />
 
         <p class="mb-1">
             <strong>Name:</strong>
-            <span th:text="${institution.name != null ? institution.name : '-'}">Institution name</span>
+            <span th:text="${institution.name != null ? institution.name : '-'}">Company name</span>
         </p>
 
         <p class="mb-1">
@@ -64,7 +64,7 @@
 
     <!-- Applications table -->
     <div th:if="${!#lists.isEmpty(applications)}">
-        <h2 class="table-title">Applications using this institution</h2>
+        <h2 class="table-title">Applications using this company</h2>
 
         <div class="card shadow-orange p-3">
             <table class="table table-bordered table-hover align-middle mb-0">
@@ -102,13 +102,13 @@
     <!-- When no applications left -->
     <div th:if="${#lists.isEmpty(applications)}">
         <div class="alert alert-success shadow-orange">
-            This institution is no longer used by any applications.
+            This Company is no longer used by any applications.
             You can safely delete it now.
         </div>
 
         <form th:action="@{/institutions/{id}/delete(id=${institution.id})}" method="post">
             <button type="submit" class="btn btn-danger">
-                Delete Institution
+                Delete Company
             </button>
         </form>
     </div>
