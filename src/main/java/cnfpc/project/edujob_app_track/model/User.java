@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -67,8 +68,14 @@ public class User {
     private Set<User> supervisors;
 
     // One-to-Many: User → Applications
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Application> applications;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Institution> institutions;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Document> documents;
 
     public Long getId() {
         return id;
@@ -166,4 +173,21 @@ public class User {
         this.applications = applications;
     }
 
+    public Set<Institution> getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(Set<Institution> institutions) {
+        this.institutions = institutions;
+    }
+
+    public Set<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
+    }
+
+    
 }

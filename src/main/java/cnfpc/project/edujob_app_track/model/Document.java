@@ -17,6 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -33,7 +35,7 @@ public class Document {
     @NotBlank
     private String contentType; // pdf, excel, picture, document, etc.
 
-    private LocalDate uploadDate;
+    private LocalDate uploadDate = LocalDate.now();;
 
     @Lob
     @Column(columnDefinition = "BLOB")
@@ -126,7 +128,17 @@ public class Document {
         this.user = user;
     }
 
-    
+    @PrePersist
+    public void onCreate() {
+        if (uploadDate == null) {
+            uploadDate = LocalDate.now();
+        }
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        uploadDate = LocalDate.now();
+    }
     
     
 }
