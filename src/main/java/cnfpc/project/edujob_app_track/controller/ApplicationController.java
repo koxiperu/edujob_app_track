@@ -3,8 +3,6 @@ package cnfpc.project.edujob_app_track.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,6 +19,7 @@ import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationType;
 import cnfpc.project.edujob_app_track.model.Enums.ResultStatus;
+import cnfpc.project.edujob_app_track.model.Institution;
 import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.ApplicationRepository;
 import cnfpc.project.edujob_app_track.repository.DocumentRepository;
@@ -205,4 +204,81 @@ public class ApplicationController {
         model.addAttribute("app", application);
         return "application/details";
     }
+
+    @GetMapping("/documents/{id}/used")
+    public String documentUsedPage(@PathVariable Long id, Model model, Principal principal) {
+
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Document document = documentRepository.findById(id)
+                .filter(d -> d.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        List<Application> applications =
+                applicationRepository.findAllByDocumentId(id);
+
+        model.addAttribute("document", document);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Document is in use");
+
+        return "application/doc_used";
+    }
+
+    @GetMapping("/institutions/{id}/used")
+    public String institutionUsedPage(@PathVariable Long id, Model model, Principal principal) {
+
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Institution institution = institutionRepository.findById(id)
+                .filter(d -> d.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        List<Application> applications =
+                applicationRepository.findAllByInstitutionId(id);
+
+        model.addAttribute("institution", institution);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Institution is in use");
+
+        return "application/inst_used";
+    }
+
+    @PostMapping("/documents/{docId}/applications/{appId}/delete")
+    public String deleteApplicationFromDocument(
+            @PathVariable Long docId,
+            @PathVariable Long appId,
+            Principal principal
+    ) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Application application = applicationRepository.findById(appId)
+                .filter(a -> a.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        applicationRepository.delete(application);
+
+        return "redirect:/applications/documents/" + docId + "/used";
+        
+    }
+
+    @PostMapping("/institutions/{instId}/applications/{appId}/delete")
+    public String deleteApplicationFromInstitution(
+            @PathVariable Long instId,
+            @PathVariable Long appId,
+            Principal principal
+    ) {
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        Application application = applicationRepository.findById(appId)
+                .filter(a -> a.getUser().equals(user))
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        applicationRepository.delete(application);
+
+        // Redirect to the correct “institution-used” page
+        return "redirect:/applications/institutions/" + instId + "/used";
+    }
+
+
+
 }

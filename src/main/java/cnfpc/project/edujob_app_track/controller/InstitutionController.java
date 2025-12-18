@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cnfpc.project.edujob_app_track.model.Application;
 import cnfpc.project.edujob_app_track.model.Enums.InstitutionType;
 import cnfpc.project.edujob_app_track.model.Institution;
 import cnfpc.project.edujob_app_track.model.User;
+import cnfpc.project.edujob_app_track.repository.ApplicationRepository;
 import cnfpc.project.edujob_app_track.repository.InstitutionRepository;
 import cnfpc.project.edujob_app_track.service.UserService;
 import jakarta.validation.Valid;
@@ -28,11 +30,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/institutions")
 public class InstitutionController {
     private final InstitutionRepository institutionRepository;
-    private final UserService userService;;
+    private final UserService userService;
+    private final ApplicationRepository applicationRepository;
 
-    public InstitutionController(InstitutionRepository institutionRepository, UserService userService) {
+    public InstitutionController(InstitutionRepository institutionRepository, UserService userService, ApplicationRepository applicationRepository) {
         this.institutionRepository = institutionRepository;
         this.userService = userService;
+        this.applicationRepository = applicationRepository;
     }
 
     @GetMapping
@@ -122,7 +126,31 @@ public class InstitutionController {
         if (!institution.getUser().equals(userService.getLoggedInUser())) {
             throw new AccessDeniedException("You cannot edit this institution");
         }
+        List<Application> applications = applicationRepository.findAllByInstitutionId(id);
+        if (!applications.isEmpty()) {
+            // Redirect to institution-used page instead of attempting deletion
+            return "redirect:/applications/institutions/" + id + "/used";
+        }
         institutionRepository.deleteById(id);
         return "redirect:/institutions";
     }
+
+    @GetMapping("/applications/institutions/{id}/used")
+    public String institutionUsedPage(@PathVariable Long id, Model model, Principal principal) {
+
+        Institution institution = institutionRepository.findById(id).orElseThrow();
+        if (!institution.getUser().equals(userService.getLoggedInUser())) {
+            throw new AccessDeniedException("You cannot edit this institution");
+        }
+
+        List<Application> applications =
+                applicationRepository.findAllByInstitutionId(id); // You need a repository method
+
+        model.addAttribute("institution", institution);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Institution is in use");
+
+        return "application/institution_used"; // new Thymeleaf template
+    }
+
 }

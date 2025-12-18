@@ -2,6 +2,7 @@ package cnfpc.project.edujob_app_track.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import cnfpc.project.edujob_app_track.model.Application;
 import cnfpc.project.edujob_app_track.model.Document;
 import cnfpc.project.edujob_app_track.model.Enums.DocumentStatus;
 import cnfpc.project.edujob_app_track.model.User;
+import cnfpc.project.edujob_app_track.repository.ApplicationRepository;
 import cnfpc.project.edujob_app_track.repository.DocumentRepository;
 import cnfpc.project.edujob_app_track.service.UserService;
 import jakarta.validation.Valid;
@@ -30,10 +33,12 @@ public class DocumentController {
 
     private final DocumentRepository documentRepository;
     private final UserService userService;
+    private final ApplicationRepository applicationRepository;
 
-    public DocumentController(DocumentRepository documentRepository, UserService userService) {
+    public DocumentController(DocumentRepository documentRepository, UserService userService, ApplicationRepository applicationRepository) {
         this.documentRepository = documentRepository;
         this.userService = userService;
+        this.applicationRepository = applicationRepository;
     }
 
     /* LIST ALL DOCUMENTS */
@@ -149,8 +154,15 @@ public class DocumentController {
                                 Principal principal) {
 
         User currentUser = userService.getLoggedInUser();
-        documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
-        documentRepository.deleteById(id);
+        Document document = documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
+        List<Application> usedInApps = applicationRepository.findAllByDocumentId(id);
+
+        if (!usedInApps.isEmpty()) {
+            return "redirect:/applications/documents/" + id + "/used";
+        }
+
+        // Safe to delete
+        documentRepository.delete(document);
         return returnUrl != null ? "redirect:" + returnUrl : "redirect:/documents";
     }
 
@@ -167,5 +179,23 @@ public class DocumentController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + doc.getFileName() + "\"")
                 .contentType(MediaType.parseMediaType(doc.getContentType()))
                 .body(doc.getData());
+    }
+
+    @GetMapping("/applications/documents/{id}/used")
+    public String documentUsedPage(@PathVariable Long id, Model model) {
+
+        User currentUser = userService.getLoggedInUser();
+
+        Document document = documentRepository.findByIdAndUser(id, currentUser)
+                .orElseThrow(() -> new SecurityException("Access denied"));
+
+        List<Application> applications =
+                applicationRepository.findAllByDocumentId(id);
+
+        model.addAttribute("document", document);
+        model.addAttribute("applications", applications);
+        model.addAttribute("title", "Document is in use");
+
+        return "application/document-used";
     }
 }
