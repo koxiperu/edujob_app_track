@@ -50,7 +50,7 @@ public class InstitutionController {
         boolean noInstitutions = grouped.values().stream().allMatch(List::isEmpty);
         model.addAttribute("noInstitutions", noInstitutions);
         model.addAttribute("groupedInstitutions", grouped);
-        model.addAttribute("title", "Institutions");
+        model.addAttribute("title", "Companies");
         model.addAttribute("containerClass", "user");
 
         return "institution/list";
@@ -62,7 +62,7 @@ public class InstitutionController {
         model.addAttribute("institution", new Institution());
         model.addAttribute("types", InstitutionType.values());
         model.addAttribute("returnUrl", returnUrl);
-        model.addAttribute("title", "Add Institution");
+        model.addAttribute("title", "Add Company");
         model.addAttribute("containerClass", "forms");
         return "institution/form";
     }
@@ -77,7 +77,7 @@ public class InstitutionController {
         if (result.hasErrors()) {
             model.addAttribute("types", InstitutionType.values());
             model.addAttribute("returnUrl", returnUrl);
-            model.addAttribute("title", "Add Institution");
+            model.addAttribute("title", "Add Company");
             return "institution/form";
         }
 
@@ -98,7 +98,7 @@ public class InstitutionController {
         }
         model.addAttribute("institution", institution);
         model.addAttribute("types", InstitutionType.values());
-        model.addAttribute("title", "Edit Institution");
+        model.addAttribute("title", "Edit Company");
         model.addAttribute("containerClass", "forms");
         return "institution/form";
     }
@@ -108,12 +108,12 @@ public class InstitutionController {
     public String update(@PathVariable Long id,@Valid @ModelAttribute Institution institution, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("types", InstitutionType.values());
-            model.addAttribute("title", "Edit Institution");
+            model.addAttribute("title", "Edit Company");
             return "institution/form";
         }
         
         if (!institution.getUser().equals(userService.getLoggedInUser())) {
-            throw new AccessDeniedException("You cannot edit this institution");
+            throw new AccessDeniedException("You cannot edit this company");
         }
         institution.setId(id);
         institutionRepository.save(institution);
@@ -125,7 +125,7 @@ public class InstitutionController {
     public String delete(@PathVariable Long id) {
         Institution institution = institutionRepository.findById(id).orElseThrow();
         if (!institution.getUser().equals(userService.getLoggedInUser())) {
-            throw new AccessDeniedException("You cannot edit this institution");
+            throw new AccessDeniedException("You cannot edit this company");
         }
         List<Application> applications = applicationRepository.findAllByInstitutionId(id);
         if (!applications.isEmpty()) {
@@ -141,7 +141,7 @@ public class InstitutionController {
 
         Institution institution = institutionRepository.findById(id).orElseThrow();
         if (!institution.getUser().equals(userService.getLoggedInUser())) {
-            throw new AccessDeniedException("You cannot edit this institution");
+            throw new AccessDeniedException("You cannot edit this company");
         }
 
         List<Application> applications =
@@ -149,7 +149,7 @@ public class InstitutionController {
 
         model.addAttribute("institution", institution);
         model.addAttribute("applications", applications);
-        model.addAttribute("title", "Institution is in use");
+        model.addAttribute("title", "Company is in use");
 
         return "application/institution_used"; // new Thymeleaf template
     }
