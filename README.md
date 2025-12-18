@@ -35,64 +35,66 @@ List main features (high-priority first):
 ![ERD diagram](images/ERD.png)
 Describe entities and relationships briefly (or refer to ERD):
 - Users: 
--- id: Long, primary key, auto-generated
--- username: String, unique, not null (used for login)
--- password: String, not null (hashed via Spring Security)
--- email: String, not null, validated as email
--- firstName, lastName: String, not null
--- birthDate: LocalDate, optional
--- phone: String, optional
--- role_id: foreign key → roles.id (Many-to-One)
+ - id: Long, primary key, auto-generated
+ - username: String, unique, not null (used for login)
+ - password: String, not null (hashed via Spring Security)
+ - email: String, not null, validated as email
+ - firstName, lastName: String, not null
+ - birthDate: LocalDate, optional
+ - phone: String, optional
+ - role_id: foreign key → roles.id (Many-to-One)
 Relationships:
---Supervisors / Supervised Users: Self-referencing Many-to-Many through user_supervisor join table
---Applications: One-to-Many (User → Application)
+ - Supervisors / Supervised Users: Self-referencing Many-to-Many through user_supervisor join table
+ - Applications: One-to-Many (User → Application)
+ - Documents: One-to-Many (User → Document)
+ - Institutions: One-to-Many (User → Institution)
 - Roles: ADMIN, USER
--- id: Long, primary key, auto-generated
--- name: String, unique, not null (e.g., ADMIN, USER)
+ - id: Long, primary key, auto-generated
+ - name: String, unique, not null (e.g., ADMIN, USER)
 Relationships:
--- Users: One-to-Many (Role → User) — each user is assigned exactly one role.
+ - Users: One-to-Many (Role → User) — each user is assigned exactly one role.
 - Applications: track submissions and deadlines
--- id: Long, primary key, auto-generated
--- title: String, not null — application title
--- description: String (up to 5000 chars) — optional description
--- user_id: Long, foreign key → users.id — owner of the application
--- institution_id: Long, foreign key → institutions.id — related institution
--- applicationType: ENUM (JOB / UNIVERSITY / LYCEE / COURSE)
--- creationDate: LocalDate — automatically set on creation
--- submitDate, submitDeadline, responseDeadline: LocalDate — track submission and response deadlines
--- status: ENUM (PLANNED, SUBMITTED, ACCEPTED, REJECTED, etc.)
--- responseStatus: ENUM (tracks response/result)
--- resultNotes: String (up to 2000 chars) — optional notes
+ - id: Long, primary key, auto-generated
+ - title: String, not null — application title
+ - description: String (up to 5000 chars) — optional description
+ - user_id: Long, foreign key → users.id — owner of the application
+ - institution_id: Long, foreign key → institutions.id — related institution
+ - applicationType: ENUM (JOB / UNIVERSITY / LYCEE / COURSE)
+ - creationDate: LocalDate — automatically set on creation
+ - submitDate, submitDeadline, responseDeadline: LocalDate — track submission and response deadlines
+ - status: ENUM (PLANNED, SUBMITTED, ACCEPTED, REJECTED, etc.)
+ - responseStatus: ENUM (tracks response/result)
+ - resultNotes: String (up to 2000 chars) — optional notes
 Relationships:
--- Many-to-One: User → Application (each application belongs to a single user)
--- Many-to-One: Institution → Application (application linked to an institution)
--- Many-to-Many: Application ↔ Document via app_doc join table (each application can have multiple documents, and each document can be linked to multiple applications)
+ - Many-to-One: User → Application (each application belongs to a single user)
+ - Many-to-One: Institution → Application (application linked to an institution)
+ - Many-to-Many: Application ↔ Document via app_doc join table (each application can have multiple documents, and each document can be linked to multiple applications)
 - Documents: uploaded PDFs, reusable across applications
--- id: Long, primary key, auto-generated
--- fileName: String, not null — name of the file
--- contentType: String, not null — file MIME type (pdf, image, etc.)
--- uploadDate: LocalDate — date when file was uploaded
--- data: BLOB — file content stored in Oracle BLOB
--- status: ENUM (READY, NOT_READY, IN_PROGRESS)
+ - id: Long, primary key, auto-generated
+ - fileName: String, not null — name of the file
+ - contentType: String, not null — file MIME type (pdf, image, etc.)
+ - uploadDate: LocalDate — date when file was uploaded
+ - data: BLOB — file content stored in Oracle BLOB
+ - status: ENUM (READY, NOT_READY, IN_PROGRESS)
 Relationships:
--- Many-to-One: User → Document (uploader/owner of the document)
--- Many-to-Many: Document ↔ Application via app_doc join table (documents can be attached to multiple applications)
+ - Many-to-One: User → Document (uploader/owner of the document)
+ - Many-to-Many: Document ↔ Application via app_doc join table (documents can be attached to multiple applications)
 - Institutions: universities, employers, lycées, courses
--- id: Long, primary key, auto-generated
--- name: String, not null — institution name
--- type: ENUM (InstitutionType), not null — JOB / UNIVERSITY / LYCEE / COURSE
--- country: String — country of institution
--- address: String — full address
--- website: String — URL of institution
--- phone: String — contact phone number
--- email: String — contact email, validated with @Email
--- user_id: Long — owner/creator of the institution (optional)
+ - id: Long, primary key, auto-generated
+ - name: String, not null — institution name
+ - type: ENUM (InstitutionType), not null — JOB / UNIVERSITY / LYCEE / COURSE
+ - country: String — country of institution
+ - address: String — full address
+ - website: String — URL of institution
+ - phone: String — contact phone number
+ - email: String — contact email, validated with @Email
+ - user_id: Long — owner/creator of the institution (optional)
 Relationships:
--- One-to-Many: Institution → Application (an institution can have multiple applications linked)
--- Many-to-One: User → Institution (user who added/created the institution)
+ - One-to-Many: Institution → Application (an institution can have multiple applications linked)
+ - Many-to-One: User → Institution (user who added/created the institution)
 - Join tables: app_doc
--- application_id: Long, foreign key → applications.id
--- document_id: Long, foreign key → documents.id
+ - application_id: Long, foreign key → applications.id
+ - document_id: Long, foreign key → documents.id
 
 
 ### Prerequisites
@@ -102,15 +104,13 @@ Relationships:
 - DBeaver or any Oracle client (optional)
 
 # Project setup and run instructions
+## 
+
 1. Clone the repository:
-`git clone <repo-url>`
-2. Switch to your feature branch:
-   git checkout <branch-name>
-3. Configure application.properties:
-   spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
-   spring.datasource.username=app_tracker
-   spring.datasource.password=MyStrongPassword123
-4. Run Oracle container (if not already running)
+```git clone```
+2. Switch to master branch:
+   ``` git checkout master``` 
+3. Run Oracle container (if not already running)
 5. Build and run the application:
    mvn clean package
    java -jar target/app-tracker-0.0.1-SNAPSHOT.jar
