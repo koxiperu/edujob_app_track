@@ -32,4 +32,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>{
     @Query("SELECT a FROM Application a LEFT JOIN FETCH a.documents LEFT JOIN FETCH a.institution WHERE a.id = :id")
     Optional<Application> findByIdWithDocuments(@Param("id") Long id);
 
+    @Query("select a from Application a join a.documents d where d.id = :documentId")
+    List<Application> findAllByDocumentId(Long documentId);
+
 }
