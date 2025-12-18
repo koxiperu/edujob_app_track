@@ -35,4 +35,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>{
     @Query("select a from Application a join a.documents d where d.id = :documentId")
     List<Application> findAllByDocumentId(Long documentId);
 
+    List<Application> findAllByInstitutionId(Long institutionId);
+
 }
