@@ -10,6 +10,22 @@ The project is designed to demonstrate full-stack Spring Boot skills, including 
 - Upload and store documents (PDFs) in Oracle BLOBs.
 - Notifications for upcoming deadlines/interviews.
 
+### Project sctructure 
+```
+src/main/java
+ ├── config        # Security & app config
+ ├── controller    # MVC controllers
+ ├── model         # JPA entities
+ ├── repository    # Spring Data repositories
+ └── service       # Business logic
+
+src/main/resources
+ ├── templates     # Thymeleaf HTML
+ ├── static        # CSS, JS, images
+ └── application.yml
+
+```
+
 ### Features
 List main features:
 - User registration and login (Spring Security)
@@ -19,9 +35,12 @@ List main features:
 - Many-to-many relationships (Applications ↔ Documents)
 - Institution management (universities, employers, lycées, courses)
 - Dashboard showing applications and notifications about deadlines
-Future features (to do):
+### Future possible enhasements (TODO)
+- Dashboard and email notifications for deadlines/interviews
+- Advanced search/filter for applications
+- Export application data to PDF/Excel
+- Integration with external APIs (universities or employers)
 - Supervisor management (self-referencing user relationships)
-- Dashboard (or even email) notifications
 
 ### Technical stack
 - Backend: Spring Boot 3.x
@@ -98,6 +117,12 @@ Relationships:
  - application_id: Long, foreign key → applications.id
  - document_id: Long, foreign key → documents.id
 
+### Testing
+Currently no testing. 
+Future versions may include:
+- Unit tests (JUnit)
+- Integration tests
+- Testcontainers for Oracle
 
 ### Prerequisites
 - Java 21
@@ -106,27 +131,11 @@ Relationships:
 - DBeaver or any Oracle client (optional)
 
 # 2. Project setup and run instructions
-## 
-
-1. Clone the repository:
-```git clone```
-2. Switch to master branch:
-   ``` git checkout master``` 
-3. Run Oracle container (if not already running)
-5. Build and run the application:
-   mvn clean package
-   java -jar target/app-tracker-0.0.1-SNAPSHOT.jar
-6. Access in browser: http://localhost:8080
-
-
 
 ## 2.1. Run locally (Java & Maven required)
-Prerequisites:
-- Java 21
-- Maven
-- Docker (Oracle DB)
-### Install Java 21
-#### Windows:
+### 2.1.1. Check if Java 21, Maven and Docker installed (skip if already installed)
+#### Install Java 21
+##### Windows:
 - Download JDK 21 (LTS) from:
 https://adoptium.net/
 - Choose:
@@ -135,28 +144,60 @@ Package: JDK
 OS: Windows
 - Install and check “Set JAVA_HOME”
 - Verify:
-```java -version```
+```
+java -version
+```
 
-#### macOS (Homebrew):
-```brew install openjdk@21
+##### macOS (Homebrew):
+```
+brew install openjdk@21
 echo 'export JAVA_H$(/usr/libexec/java_home -v21)' >> ~/.zshrc
 source ~/.zshrc
 java -version
+```
 
-Linux (Ubunja)a -version```up#### Linux (Ubuntu)install -y openjdk-21-jdk
+##### Linux (Ubuntu):
+```
+sudo apt update
+sudo apt install -y openjdk-21-jdk
 java -version
+```
 
-### Install Maven
-### Install Docker
+#### Install Maven
+##### Windows
+- Download Maven:
+https://maven.apache.org/download.cgi
+- Extract to: C:\Program Files\Apache\Maven
+- Add to PATH: C:\Program Files\Apache\Maven\bin
+- Verify:
+```
+mvn -version
+```
+
+##### macOS (Homebrew):
+```
+brew install maven
+mvn -version
+```
+
+##### Linux (Ubuntu):
+```
+sudo apt install -y maven
+mvn -version
+```
+
+#### Install Docker
  Because Oracle XE is too heavy to install manually — Docker is required. 
- Windows / macOS: 
+##### Windows / macOS:
 - Download Docker Desktop
 https://www.docker.com/products/docker-desktop
 - Install and restart your computer if prompted
 - Start Docker Desktop
 - Verify installation:
-```docker --version```
-Linux (Ubuntu):
+```
+docker --version
+```
+##### Linux (Ubuntu):
 ```
 sudo apt update
 sudo apt install -y docker.io docker-compose-plugin
@@ -165,89 +206,57 @@ sudo systemctl enable docker
 docker --version
 ```
 
+### 2.1.2. Run Oracle in Docker
+After Java, Maven and Docker installed, let's start Oracle XE 21c with:
+- SYS password: Admin123
+- Schema: edujob_app_tracker
+- Schema password: edujobapptrackerpassword
+- Exposes Oracle on localhost:1521
 
-ry OR just download docker-compose.yml
+Pull docker image for Oracle db:
+```
+docker pull gvenzl/oracle-xe:21-slim
+```
+Run container:
+```
+docker run -d \
+  --name oracle-xe-1 \
+  -p 1521:1521 \
+  -e ORACLE_PASSWORD=Admin123 \
+  -e APP_USER=edujob_app_tracker \
+  -e APP_USER_PASSWORD=edujobapptrackerpassword \
+  gvenzl/oracle-xe:21-slim
+```
 
-The repo contains a docker-compose.yml like:
+Connect with DBeaver / SQL Developer:
+Host: localhost
+Port: 1521
+Service name: XEPDB1
+Username: edujob_app_tracker
+Password: edujobapptrackerpassword
 
-version: '3.8'
-services:
-  oracle:
-    image: gvenzl/oracle-xe
-    container_name: oracle-xe
-    ports:
-      - "1521:1521"
-    environment:
-      ORACLE_PASSWORD: Admin123
-    volumes:
-      - oracle-data:/opt/oracle/oradata
+### 2.1.3. Run app
+Clone git repository, open, build and run:
+```
+git clone https://github.com/koxiperu/edujob_app_track.git
+cd edujob-app-tracker
+./mvnw clean package -DskipTests
+java -jar target/edujob_app_track-0.0.1-SNAPSHOT.jar
+```
 
-volumes:
-  oracle-data:
+Open browser: http://localhost:8080
 
-Run:
+The application will start with a set of mocked data.
 
-```docker compose up -d```
+**Note:** The `-DskipTests` flag is used to skip the tests, which are currently failing.
 
+## 2.2. Run using docker-compose.yml (alternative to 2.1)
+//TODO:
 
-This starts a clean Oracle XE instance.
-
-## Step 3: Create your project schema
-
-Run your SQL script:
-
-```schema.sql```
-
-
-```docker exec -i oracle-xe sqlplus sys/Admin123@XEPDB1 as sysdba < schema.sql```
-
-
-This creates:
-
-Schema: app_tracker
-
-Role table
-
-Admin user (hashed password)
-
-Any required sequences or indexes
-
-## Step 4: Run your application
-
-Download JAR file:
-
-application-tracker-1.0.0.jar
-
-
-Then run it:
-
-```java -jar application-tracker-1.0.0.jar```
-
-
-Now connect the app to the Oracle container:
-
-spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
-spring.datasource.username=app_tracker
-spring.datasource.password=AppTracker123
-
-
-Open browser:
-
-http://localhost:8080
-
-
-And your application works
-
-# Usage
+# 3. Usage
 - Register a new user or login
 - Add a supervisor (if applicable)
 - Create applications and attach documents
 - Track status, deadlines, and upcoming interviews
 - View dashboards and notifications
-
-# Future possible enhasements (TODO)
-- Email notifications for deadlines/interviews
-- Advanced search/filter for applications
-- Export application data to PDF/Excel
-- Integration with external APIs (universities or employers)
 
