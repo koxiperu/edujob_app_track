@@ -5,7 +5,7 @@ import cnfpc.project.edujob_app_track.model.User;
 import cnfpc.project.edujob_app_track.repository.RoleRepository;
 import cnfpc.project.edujob_app_track.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,18 +16,16 @@ public class DataInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
         // Initialize Roles
-        Role userRole = roleRepository.findByName("USER").orElseGet(() -> {
+        roleRepository.findByName("USER").orElseGet(() -> {
             Role role = new Role();
             role.setName("USER");
             return roleRepository.save(role);
@@ -44,7 +42,7 @@ public class DataInitializer implements CommandLineRunner {
         if (adminUserOptional.isEmpty()) {
             User admin = new User();
             admin.setUsername("annabu");
-            admin.setPassword("$2a$10$OUbU6HaS.hEUMQoS22XBLut2XbULd9KKibq1WDoK4MoN5Mcmbe4Kmi"); // Pre-generated hash for "admin"
+            admin.setPassword(new BCryptPasswordEncoder().encode("admin")); // Pre-generated hash for "admin"
             admin.setEmail("anna@bu.com");
             admin.setFirstName("Anna");
             admin.setLastName("Bu");
