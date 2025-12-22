@@ -220,11 +220,11 @@ docker pull gvenzl/oracle-xe:21-slim
 Run container:
 ```
 docker run -d \
-  --name oracle-xe-1 \
+  --name oracle-xe \
   -p 1521:1521 \
   -e ORACLE_PASSWORD=Admin123 \
-  -e APP_USER=edujob_app_tracker \
-  -e APP_USER_PASSWORD=edujobapptrackerpassword \
+  -e APP_USER=app_tracker \
+  -e APP_USER_PASSWORD=AppTracker123 \
   gvenzl/oracle-xe:21-slim
 ```
 
@@ -232,11 +232,12 @@ Connect with DBeaver / SQL Developer:
 Host: localhost
 Port: 1521
 Service name: XEPDB1
-Username: edujob_app_tracker
-Password: edujobapptrackerpassword
+Username: app_tracker
+Password: AppTracker123
 
 ### 2.1.3. Run app
 Clone git repository, open, build and run:
+
 ```
 git clone https://github.com/koxiperu/edujob_app_track.git
 cd edujob-app-tracker

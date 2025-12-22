@@ -19,7 +19,7 @@ h1.mb-0 {
 
 /* Background image for profile page */
 .bg-profile {
-    background: url("/images/my.jpg") no-repeat fixed;
+    background: url("/images/profile-bg.jpg") no-repeat fixed;
     background-size: cover;
 }
 
