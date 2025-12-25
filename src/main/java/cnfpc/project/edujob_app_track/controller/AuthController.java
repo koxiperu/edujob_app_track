@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import cnfpc.project.edujob_app_track.model.Institution;
 import cnfpc.project.edujob_app_track.model.Role;
 import cnfpc.project.edujob_app_track.model.User;
+import cnfpc.project.edujob_app_track.model.Enums.InstitutionType;
+import cnfpc.project.edujob_app_track.repository.InstitutionRepository;
 import cnfpc.project.edujob_app_track.repository.RoleRepository;
 import cnfpc.project.edujob_app_track.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -21,11 +24,13 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final InstitutionRepository institutionRepository;
     
-    public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
+    public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,RoleRepository roleRepository, InstitutionRepository institutionRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.institutionRepository = institutionRepository;
     }
 
     @GetMapping("/login")
@@ -65,6 +70,33 @@ public class AuthController {
 
         // Save user
         userRepository.save(user);
+
+        // Add default companies for the new user
+        String[] companies = {
+            "CFL - Société Nationale des Chemins de Fer Luxembourgeois",
+            "Dussmann Luxembourg",
+            "POST Luxembourg",
+            "Amazon",
+            "Cactus",
+            "BNP PARIBAS Luxembourg",
+            "PwC Luxembourg",
+            "ArcelorMittal",
+            "Goodyear",
+            "Cargolux Airlines International SA"
+        };
+
+        for (String companyName : companies) {
+            Institution institution = new Institution();
+            institution.setName(companyName);
+            institution.setType(InstitutionType.EMPLOYER);
+            institution.setCountry("Luxembourg");
+            institution.setAddress("123, " + companyName + " Street, L-1234 Luxembourg");
+            institution.setWebsite("www." + companyName.toLowerCase().replaceAll("\\s+", "") + ".lu");
+            institution.setEmail("contact@" + companyName.toLowerCase().replaceAll("\\s+", "") + ".lu");
+            institution.setPhone("+352 123 456 789");
+            institution.setUser(user); // Associate with the newly registered user
+            institutionRepository.save(institution);
+        }
 
         return "redirect:/login?registered";
     }

@@ -238,19 +238,24 @@ Password: AppTracker123
 ### 2.1.3. Run app
 Clone git repository, open, build and run:
 
-```
+```bash
 git clone https://github.com/koxiperu/edujob_app_track.git
 cd edujob-app-tracker
-./mvnw clean package -DskipTests
-java -jar target/edujob_app_track-0.0.1-SNAPSHOT.jar
 ```
 
-Open browser: http://localhost:8080
+Stop any previously running Java applications on port 8080:
+```
+killall java
+```
+
+Build the project:
+```
+./mvnw clean package
+```
+Open browser (Linux example, adjust for your OS if needed)
+xdg-open http://localhost:8080
 
 The application will start with a set of mocked data.
-
-**Note:** The `-DskipTests` flag is used to skip the tests, which are currently failing.
-
 ## 2.2. Run using docker-compose.yml (alternative to 2.1)
 //TODO:
 
