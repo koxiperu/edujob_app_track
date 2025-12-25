@@ -26,6 +26,7 @@
         <!-- Info fields -->
         <div class="profile-info mb-4">
             <p><strong>Title:</strong> <span th:text="${app.title != null ? app.title : '-'}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${app.description != null ? app.description : '-'}"></span></p>
             <p><strong>Company:</strong> <span th:text="${app.institution != null ? app.institution.name : '-'}"></span></p>
             <p><strong>Type:</strong> <span th:text="${app.applicationType != null ? app.applicationType : '-'}"></span></p>
             <p><strong>Status:</strong> <span th:text="${app.status != null ? app.status : '-'}"></span></p>
@@ -34,6 +35,7 @@
             <p><strong>Submission Date:</strong> <span th:text="${app.submitDate != null ? app.submitDate : '-'}"></span></p>
             <p><strong>Submission Deadline:</strong> <span th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></span></p>
             <p><strong>Response Deadline:</strong> <span th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></span></p>
+            <p><strong>Result Notes:</strong> <span th:text="${app.resultNotes != null ? app.resultNotes : '-'}"></span></p>
 
             <!-- Documents -->
             <p><strong>Documents:</strong></p>

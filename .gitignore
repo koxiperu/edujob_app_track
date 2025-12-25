@@ -34,3 +34,9 @@ build/
 GEMINI.md
 application.log
 docker_oracle.log
+
+### JS
+node_modules/
+e2e/
+test-results/
+playwright-report/

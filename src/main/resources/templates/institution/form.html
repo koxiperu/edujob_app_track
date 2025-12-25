@@ -31,47 +31,47 @@
 
             <!-- Name -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Name *</label>
-                <input th:field="*{name}" class="form-control">
+                <label for="name" class="form-label">Name *</label>
+                <input th:field="*{name}" id="name" class="form-control">
                 <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
 
             <!-- Type -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Type *</label>
-                <select th:field="*{type}" class="form-select">
+                <label for="type" class="form-label">Type *</label>
+                <select th:field="*{type}" id="type" class="form-select">
                     <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
                 </select>
             </div>
 
             <!-- Country -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Country</label>
-                <input th:field="*{country}" class="form-control">
+                <label for="country" class="form-label">Country</label>
+                <input th:field="*{country}" id="country" class="form-control">
             </div>
 
             <!-- Email -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Email</label>
-                <input th:field="*{email}" class="form-control">
+                <label for="email" class="form-label">Email</label>
+                <input th:field="*{email}" id="email" class="form-control">
             </div>
 
             <!-- Website -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Website</label>
-                <input th:field="*{website}" class="form-control">
+                <label for="website" class="form-label">Website</label>
+                <input th:field="*{website}" id="website" class="form-control">
             </div>
 
             <!-- Address -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Address</label>
-                <input th:field="*{address}" class="form-control">
+                <label for="address" class="form-label">Address</label>
+                <input th:field="*{address}" id="address" class="form-control">
             </div>
 
             <!-- Phone -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Phone</label>
-                <input th:field="*{phone}" class="form-control">
+                <label for="phone" class="form-label">Phone</label>
+                <input th:field="*{phone}" id="phone" class="form-control">
             </div>
 
             <!-- Submit -->
