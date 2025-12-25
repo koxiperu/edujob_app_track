@@ -28,38 +28,38 @@
 
             <!-- SECTION: Title -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Title *</label>
-                <input th:field="*{title}" class="form-control" required>
+                <label for="title" class="form-label">Title *</label>
+                <input th:field="*{title}" id="title" class="form-control" required>
                 <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
             </div>
 
             <!-- SECTION: Description -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Description</label>
-                <textarea th:field="*{description}" class="form-control"></textarea>
+                <label for="description" class="form-label">Description</label>
+                <textarea th:field="*{description}" id="description" class="form-control"></textarea>
             </div>
 
             <!-- SECTION: Type -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Type *</label>
-                <select th:field="*{applicationType}" class="form-select" required>
+                <label for="applicationType" class="form-label">Type *</label>
+                <select th:field="*{applicationType}" id="applicationType" class="form-select" required>
                     <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
                 </select>
             </div>
 
             <!-- SECTION: Status -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Status *</label>
-                <select th:field="*{status}" class="form-select" required>
+                <label for="status" class="form-label">Status *</label>
+                <select th:field="*{status}" id="status" class="form-select" required>
                     <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
                 </select>
             </div>
 
             <!-- SECTION: Institution -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Company *</label>
+                <label for="institution" class="form-label">Company *</label>
                 <div class="d-flex gap-2">
-                    <select th:field="*{institution}" class="form-select" required>
+                    <select th:field="*{institution}" id="institution" class="form-select" required>
                         <option value="">-- Select Company --</option>
                         <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}"></option>
                     </select>
@@ -130,32 +130,32 @@
 
             <!-- SECTION: Submission Dates -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Submission Date</label>
-                <input type="date" th:field="*{submitDate}" class="form-control">
+                <label for="submitDate" class="form-label">Submission Date</label>
+                <input type="date" th:field="*{submitDate}" id="submitDate" class="form-control">
             </div>
 
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Submission Deadline</label>
-                <input type="date" th:field="*{submitDeadline}" class="form-control">
+                <label for="submitDeadline" class="form-label">Submission Deadline</label>
+                <input type="date" th:field="*{submitDeadline}" id="submitDeadline" class="form-control">
             </div>
 
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Response Deadline</label>
-                <input type="date" th:field="*{responseDeadline}" class="form-control">
+                <label for="responseDeadline" class="form-label">Response Deadline</label>
+                <input type="date" th:field="*{responseDeadline}" id="responseDeadline" class="form-control">
             </div>
 
             <!-- SECTION: Response Status -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Response Status</label>
-                <select th:field="*{responseStatus}" class="form-select">
+                <label for="responseStatus" class="form-label">Response Status</label>
+                <select th:field="*{responseStatus}" id="responseStatus" class="form-select">
                     <option th:each="rs : ${responseStatuses}" th:value="${rs}" th:text="${rs}"></option>
                 </select>
             </div>
 
             <!-- SECTION: Notes -->
             <div class="border p-3 mb-3 form-section">
-                <label class="form-label">Result Notes</label>
-                <textarea th:field="*{resultNotes}" class="form-control"></textarea>
+                <label for="resultNotes" class="form-label">Result Notes</label>
+                <textarea th:field="*{resultNotes}" id="resultNotes" class="form-control"></textarea>
             </div>
 
             <!-- SUBMIT -->

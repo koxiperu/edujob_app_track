@@ -131,13 +131,21 @@ public class DocumentController {
         Document doc = documentRepository.findByIdAndUser(id, currentUser).orElseThrow(() -> new SecurityException("You cannot access this document"));
         // Update file if provided
         if (file != null && !file.isEmpty()) {
-            document.setData(file.getBytes());
+            doc.setData(file.getBytes()); // Changed from document.setData
             if (document.getFileName() == null || document.getFileName().isBlank()) {
-                document.setFileName(file.getOriginalFilename());
+                doc.setFileName(file.getOriginalFilename()); // Changed from document.setFileName
+            } else {
+                doc.setFileName(document.getFileName()); // Apply new name if provided in form
             }
             if (document.getContentType() == null || document.getContentType().isBlank()) {
-                document.setContentType(file.getContentType());
+                doc.setContentType(file.getContentType()); // Changed from document.setContentType
+            } else {
+                doc.setContentType(document.getContentType()); // Apply new type if provided in form
             }
+        } else {
+            // If no new file is uploaded, update fileName and contentType from the form
+            doc.setFileName(document.getFileName());
+            doc.setContentType(document.getContentType());
         }
 
         // Update other fields

@@ -3,7 +3,6 @@ package cnfpc.project.edujob_app_track.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationStatus;
 import cnfpc.project.edujob_app_track.model.Enums.ApplicationType;

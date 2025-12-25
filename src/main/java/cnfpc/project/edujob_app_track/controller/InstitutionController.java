@@ -105,18 +105,34 @@ public class InstitutionController {
 
     /* UPDATE */
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id,@Valid @ModelAttribute Institution institution, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("types", InstitutionType.values());
-            model.addAttribute("title", "Edit Company");
-            return "institution/form";
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("institution") Institution institutionDetails, BindingResult result, Model model, Principal principal) {
+        
+        Institution existingInstitution = institutionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid institution Id:" + id));
+
+        
+        User currentUser = userService.getLoggedInUser();
+        if (!existingInstitution.getUser().equals(currentUser)) {
+            throw new AccessDeniedException("You are not authorized to edit this institution.");
         }
         
-        if (!institution.getUser().equals(userService.getLoggedInUser())) {
-            throw new AccessDeniedException("You cannot edit this company");
+        if (result.hasErrors()) {
+            model.addAttribute("title", "Edit Company");
+            model.addAttribute("types", InstitutionType.values());
+            return "institution/form";
         }
-        institution.setId(id);
-        institutionRepository.save(institution);
+
+        
+        existingInstitution.setName(institutionDetails.getName());
+        existingInstitution.setType(institutionDetails.getType());
+        existingInstitution.setCountry(institutionDetails.getCountry());
+        existingInstitution.setAddress(institutionDetails.getAddress());
+        existingInstitution.setWebsite(institutionDetails.getWebsite());
+        existingInstitution.setEmail(institutionDetails.getEmail());
+        existingInstitution.setPhone(institutionDetails.getPhone());
+
+
+        institutionRepository.save(existingInstitution);
         return "redirect:/institutions";
     }
 
