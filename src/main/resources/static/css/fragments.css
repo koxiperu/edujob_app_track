@@ -1,23 +1,32 @@
 /* =========================
-   HEADER / NAVBAR (GLOBAL)
+   HEADER & NAVBAR STYLES (COMBINED)
    ========================= */
 
 /* Main header container */
 .app-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Stack children vertically */
+    /* justify-content and align-items will be handled by sub-containers */
 
-    padding: 12px 32px;
-    background-color: #f2f2f2; /* slightly grey background */
+    padding: 0; /* Remove padding from app-header itself */
+    background-color: #f4efda; /* Original header background */
     border-bottom: 1px solid #ddd;
 
-    position: fixed !important;
+    position: fixed !important; /* Enforce fixed position */
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
+}
+
+/* Top Row of Header (logo, title, user info) */
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px; /* Apply original padding here */
+    width: 100%;
 }
 
 /* LEFT SIDE */
@@ -27,31 +36,27 @@
     gap: 16px;
 }
 
-/* Logo */
 .app-logo {
     height: 56px;
     width: auto;
     border-radius: 8px;
 }
 
-/* Title + slogan container */
 .title-container {
     display: flex;
     flex-direction: column;
 }
 
-/* Main title */
 .app-title {
     font-size: 1.5rem;
     font-weight: 800;
-    color: rgb(93, 3, 149); /* dark purple */
+    color: rgb(93, 3, 149);
     line-height: 1.2;
 }
 
-/* Slogan */
 .app-slogan {
     font-size: 0.9rem;
-    color: rgb(62, 110, 98); /* calm green */
+    color: rgb(62, 110, 98);
     margin-top: 2px;
 }
 
@@ -62,51 +67,155 @@
     gap: 12px;
 }
 
-/* Username badge */
+.user-badge:hover {
+    transform: scale(1.05);
+}
+
 .user-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 44px;
-    height: 44px;
-
+    position: relative;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background-color: rgb(255, 230, 120); /* soft yellow */
-    color: #000;
-    font-weight: bold;
-    text-decoration: none;
+    overflow: hidden;
 
     box-shadow: 0 0 12px rgb(138, 237, 212);
     transition: transform 0.2s ease;
 }
 
-.user-badge:hover {
-    transform: scale(1.05);
-    text-decoration: none;
-    color: #000;
+.user-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
 }
 
-/* Logout badge */
-.logout-badge {
+.user-badge:hover {
+    transform: scale(1.1);
+}
+.user-link {
     display: flex;
     align-items: center;
-    justify-content: center;
-
-    padding: 10px 16px;
-    border-radius: 999px;
-
-    background-color: rgb(235, 115, 50); /* orange */
-    color: #fff;
-    font-weight: 700;
+    gap: 10px;
     text-decoration: none;
-
-    box-shadow: 0 0 12px rgb(235, 208, 240);
-    transition: transform 0.2s ease;
 }
 
-.logout-badge:hover {
-    transform: scale(1.05);
+.username-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgb(43, 0, 67);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Bottom Row: Menu Button and Nav Links */
+.nav-container-wrapper {
+    display: flex; /* Arrange menu button and expanding links horizontally */
+    align-items: center;
+    width: 100%;
+    background-color: #f4efda; /* Match header background */
+    padding: 0 32px; /* Horizontal padding for this row */
+    border-top: 1px solid #eee; /* Subtle separator */
+}
+
+/* COLLAPSIBLE HORIZONTAL NAVBAR */
+.nav-container {
+    display: flex; /* Ensures menu button and links are inline */
+    align-items: center;
+    position: relative; /* important for absolute positioning of nav-links */
+}
+
+.menu-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    background-color: rgb(93, 3, 149);
     color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    z-index: 1001; /* above content */
+}
+
+.menu-button:hover {
+    background-color: rgb(43, 0, 67);
+}
+
+.menu-icon {
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    display: block;
+    position: relative;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    transition: transform 0.3s ease;
+}
+
+.menu-icon::before {
+    top: -6px;
+}
+
+.menu-icon::after {
+    top: 6px;
+}
+
+/* NAV LINKS - HORIZONTAL EXPANSION */
+.nav-links {
+    display: flex; /* Always display as flex for initial layout calculations */
+    flex-direction: row; /* Horizontal */
+    gap: 8px;
+    padding: 0; /* Remove vertical padding */
+    background-color: transparent; /* Ensure it stays transparent */
+    
+    /* Control visibility and expansion */
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap; /* Prevent wrapping */
+    transition: max-width 0.3s ease-out; /* Smooth transition for expansion */
+}
+
+.nav-container.open .nav-links {
+    max-width: 1000px; /* Increased max-width to accommodate all links */
+    padding: 0 16px; /* Add horizontal padding when open */
+    background-color: transparent; /* Ensure it stays transparent */
+}
+
+.nav-links a {
     text-decoration: none;
+    font-weight: 700;
+    color: rgb(43, 0, 67);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hamburger animation */
+.nav-container.open .menu-icon {
+    background-color: transparent;
+}
+
+.nav-container.open .menu-icon::before {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-container.open .menu-icon::after {
+    transform: rotate(-45deg) translate(5px, -5px);
 }
