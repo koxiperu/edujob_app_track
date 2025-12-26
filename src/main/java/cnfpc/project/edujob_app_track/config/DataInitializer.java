@@ -65,7 +65,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setEmail("anna@bu.com");
             admin.setFirstName("Anna");
             admin.setLastName("Bu");
-            admin.setBirthDate(LocalDate.of(2000, 5, 28)); // Example date
+            admin.setBirthDate(LocalDate.of(2000, 5, 16)); // Example date
             admin.setPhone("123456789");
             admin.setRole(adminRole); // Assign ADMIN role
             userRepository.save(admin);
