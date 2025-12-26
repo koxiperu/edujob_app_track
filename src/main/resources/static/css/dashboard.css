@@ -7,4 +7,5 @@ body {
 
 main {
     flex: 1; /* takes remaining space */
+    padding-top: 100px; /* Padding to account for fixed header */
 }
