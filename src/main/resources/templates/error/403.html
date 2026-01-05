@@ -8,6 +8,9 @@
 
     <!-- Your main CSS -->
     <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 
 <body class="bg-profile" 
@@ -16,7 +19,6 @@
 
 <!-- Header / Navbar -->
 <div th:replace="fragments/header :: header"></div>
-<div th:replace="fragments/navbar :: navbar"></div>
 
 <main class="container d-flex justify-content-center align-items-center">
     <div class="card shadow-orange p-5 text-center" style="max-width: 600px; width: 100%;">
