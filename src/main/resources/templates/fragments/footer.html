@@ -5,7 +5,7 @@
            FOOTER STYLE
            ========================= */
         .app-footer {
-            margin-top: auto; /* push footer to bottom */
+            /* Remove margin-top: auto; */
             background-color: #f4efda;
             border-top: 1px solid #ddd;
             padding: 8px 16px;
@@ -16,6 +16,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
+            position: fixed; /* Make it fixed */
+            bottom: 0;       /* Pin to the bottom */
+            left: 0;         /* Pin to the left */
+            width: 100%;     /* Full width */
+            z-index: 999;    /* Ensure it's above other content but below the header (header z-index is 1000) */
         }
     </style>
 
