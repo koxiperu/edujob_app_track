@@ -266,3 +266,9 @@ The application will start with a set of mocked data.
 - Track status, deadlines, and upcoming interviews
 - View dashboards and notifications
 
+# 4. TODO:
+## Fix frontend tables display
+## Tests
+## Refactoring
+
+##
