@@ -270,5 +270,4 @@ The application will start with a set of mocked data.
 ## Fix frontend tables display
 ## Tests
 ## Refactoring
-
-##
+## Pagination

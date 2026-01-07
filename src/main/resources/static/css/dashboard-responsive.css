@@ -12,9 +12,9 @@
 }
 
 .table-responsive .btn.btn-sm {
-    width: 45%;
+    width: 90%; /* Increased width for better usability when stacked */
     margin: auto;
-    display: inline-block;
+    display: block; /* Make them block to stack */
     padding: clamp(0.2rem, 0.5vw, 0.35rem) 0;
     font-size: clamp(0.7rem, 1vw, 0.9rem);
 }
@@ -24,7 +24,18 @@
 }
 
 .table-responsive .d-flex.gap-2 {
-    gap: 0.25rem !important;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+    gap: 0.2rem !important; /* Adjust gap between stacked buttons */
+}
+
+.table-responsive .d-flex.gap-2 form {
+    width: 100%;
+    margin: 0;
+}
+
+.table-responsive .d-flex.gap-2 form button {
+    width: 100%;
 }
 
 .btn-icon {

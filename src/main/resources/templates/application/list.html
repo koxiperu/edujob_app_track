@@ -72,7 +72,7 @@
                                     <span class="btn-text">Edit</span>
                                     <i class="bi bi-pencil-fill btn-icon"></i>
                                 </a>
-                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post">
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <span class="btn-text">Delete</span>
                                         <i class="bi bi-trash-fill btn-icon"></i>
@@ -130,7 +130,7 @@
                                     <span class="btn-text">Edit</span>
                                     <i class="bi bi-pencil-fill btn-icon"></i>
                                 </a>
-                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
+                                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post">
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <span class="btn-text">Delete</span>
                                         <i class="bi bi-trash-fill btn-icon"></i>
