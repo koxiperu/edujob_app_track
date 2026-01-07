@@ -1,0 +1,41 @@
+/* Responsive table styles */
+.table-responsive .table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-responsive .table td,
+.table-responsive .table th { /* Apply word-wrap to both td and th */
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: clamp(0.75rem, 1.2vw, 1rem);
+}
+
+.table-responsive .btn.btn-sm {
+    width: 45%;
+    margin: auto;
+    display: inline-block;
+    padding: clamp(0.2rem, 0.5vw, 0.35rem) 0;
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+}
+
+.table-responsive .btn.btn-sm .btn-icon {
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+}
+
+.table-responsive .d-flex.gap-2 {
+    gap: 0.25rem !important;
+}
+
+.btn-icon {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .btn-text {
+        display: none;
+    }
+    .btn-icon {
+        display: inline;
+    }
+}

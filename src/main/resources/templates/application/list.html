@@ -5,11 +5,14 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom list styling -->
     <link rel="stylesheet" th:href="@{/css/list.css}">
     <link rel="stylesheet" th:href="@{/css/fragments.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard-responsive.css}">
 </head>
 <body class="bg-image bg-body">
 
@@ -28,7 +31,7 @@
     <!-- JOB Applications Table -->
     <div th:if="${!#lists.isEmpty(jobApplications)}">
         <h2 class="table-title">Job Applications</h2>
-        <div class="card shadow-orange p-3">
+        <div class="card shadow-orange p-3 table-responsive">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
@@ -65,9 +68,15 @@
                         </td>
                         <td style="width: max-content;">
                             <div class="d-flex gap-2">
-                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">
+                                    <span class="btn-text">Edit</span>
+                                    <i class="bi bi-pencil-fill btn-icon"></i>
+                                </a>
                                 <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <span class="btn-text">Delete</span>
+                                        <i class="bi bi-trash-fill btn-icon"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
@@ -80,7 +89,7 @@
     <!-- EDUCATIONAL Applications Table -->
     <div th:if="${!#lists.isEmpty(eduApplications)}">
         <h2 class="table-title">Educational Applications</h2>
-        <div class="card shadow-orange p-3">
+        <div class="card shadow-orange p-3 table-responsive">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
@@ -117,9 +126,15 @@
                         </td>
                         <td style="width: max-content;">
                             <div class="d-flex gap-2">
-                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">Edit</a>
+                                <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn submit-button text-white btn-sm">
+                                    <span class="btn-text">Edit</span>
+                                    <i class="bi bi-pencil-fill btn-icon"></i>
+                                </a>
                                 <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post" style="display:inline">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <span class="btn-text">Delete</span>
+                                        <i class="bi bi-trash-fill btn-icon"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
