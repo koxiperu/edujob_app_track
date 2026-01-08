@@ -271,3 +271,4 @@ The application will start with a set of mocked data.
 ## Tests
 ## Refactoring
 ## Pagination
+## Exception handling
