@@ -41,9 +41,9 @@
                         <th style="width:25%;">Name</th>
                         <th style="width:10%;">Country</th>
                         <th style="width:20%;">Address</th>
-                        <th style="width:10%;">Phone</th>
+                        <th class="hide-on-small" style="width:10%;">Phone</th>
                         <th style="width:15%;">Email</th>
-                        <th style="width:20%;">Actions</th>
+                        <th style="width:10%;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,9 +51,9 @@
                         <td th:text="${inst.name != null ? inst.name : '-'}"></td>
                         <td th:text="${inst.country != null ? inst.country : '-'}"></td>
                         <td th:text="${inst.address != null ? inst.address : '-'}"></td>
-                        <td th:text="${inst.phone != null ? inst.phone : '-'}"></td>
+                        <td class="hide-on-small" th:text="${inst.phone != null ? inst.phone : '-'}"></td>
                         <td th:text="${inst.email != null ? inst.email : '-'}"></td>
-                        <td style="width: max-content;">
+                        <td>
                             <div class="d-flex gap-2">
                                 <a th:href="@{/institutions/{id}/edit(id=${inst.id})}" class="btn submit-button text-white btn-sm">
                                     <span class="btn-text">Edit</span>

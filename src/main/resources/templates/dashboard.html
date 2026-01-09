@@ -68,7 +68,7 @@
                         <th style="width:20%;">Company</th>
                         <th style="width:10%;">Status</th>
                         <th style="width:15%;">Submission Deadline</th>
-                        <th style="width:10%;">Response Deadline</th>
+                        <th class="hide-on-small" style="width:10%;">Response Deadline</th>
                         <th style="width:10%;">Details</th>
                     </tr>
                 </thead>
@@ -80,7 +80,7 @@
                         <td th:text="${app.institution != null ? app.institution.name : '-'}"></td>
                         <td th:text="${app.status != null ? app.status : '-'}"></td>
                         <td th:text="${app.submitDeadline != null ? app.submitDeadline : '-'}"></td>
-                        <td th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
+                        <td class="hide-on-small" th:text="${app.responseDeadline != null ? app.responseDeadline : '-'}"></td>
                         <td>
                             <a th:href="@{/applications/{id}/details(id=${app.id})}" 
                             class="btn submit-button text-white btn-sm">

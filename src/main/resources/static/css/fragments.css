@@ -119,7 +119,7 @@
     align-items: center;
     width: 100%;
     background-color: #f4efda; /* Match header background */
-    padding: 0 32px; /* Horizontal padding for this row */
+    padding: 0 32px 8px; /* Horizontal padding for this row */
     border-top: 1px solid #eee; /* Subtle separator */
 }
 

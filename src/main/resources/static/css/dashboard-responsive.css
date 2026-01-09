@@ -12,7 +12,7 @@
 }
 
 .table-responsive .btn.btn-sm {
-    width: 90%; /* Increased width for better usability when stacked */
+    width: 100%; /* Increased width for better usability when stacked */
     margin: auto;
     display: block; /* Make them block to stack */
     padding: clamp(0.2rem, 0.5vw, 0.35rem) 0;
@@ -38,8 +38,22 @@
     width: 100%;
 }
 
+.action-buttons-no-stretch .btn.btn-sm {
+    width: auto; /* Allow buttons to shrink to fit content */
+    display: inline-block; /* Revert to inline-block for side-by-side on larger screens */
+}
+.action-buttons-no-stretch {
+    flex-direction: row; /* For larger screens, display side-by-side */
+}
+
 .btn-icon {
     display: none;
+}
+
+@media (max-width: 992px) {
+    .hide-on-medium {
+        display: none !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -48,5 +62,16 @@
     }
     .btn-icon {
         display: inline;
+    }
+
+    .hide-on-small {
+        display: none !important;
+    }
+
+    .action-buttons-no-stretch {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+    }
+    .action-buttons-no-stretch .btn.btn-sm {
+        width: 100%; /* Make buttons full width when stacked */
     }
 }

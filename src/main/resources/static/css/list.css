@@ -64,7 +64,6 @@ h1.mb-0 {
 
 /* Documents buttons in table (stacked, ellipsis) */
 .btn-doc-stack {
-    width: 80px;                /* fixed width */
     white-space: nowrap;        /* prevent wrapping */
     overflow: hidden;           /* hide overflow */
     text-overflow: ellipsis;    /* show "..." if text too long */
